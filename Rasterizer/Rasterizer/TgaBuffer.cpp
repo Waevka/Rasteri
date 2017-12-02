@@ -26,9 +26,9 @@ bool TgaBuffer::save(Buffer buffer) {
 	}
 
 	file.write((const char*)&header, 18);
-	for (unsigned short i = 0; i < 256; i++) {
-		for (unsigned short j = 0; j < 256; j++) {
-			unsigned int color = 0xFFFFFF - j;
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 256; j++) {
+			unsigned int color = buffer.color[((int)buffer.width * i) + j];
 			file.write((const char*)&color, sizeof(unsigned int));
 		}
 	}

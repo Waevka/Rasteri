@@ -153,6 +153,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TgaBuffer.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="VertexProcessor.h" />
     <ClInclude Include="WFloat4x4.h" />
     <ClInclude Include="WFloat3.h" />
@@ -173,6 +174,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TgaBuffer.cpp" />
+    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="VertexProcessor.cpp" />
     <ClCompile Include="WFloat4x4.cpp" />
     <ClCompile Include="WFloat3.cpp" />

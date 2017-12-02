@@ -3,6 +3,7 @@ class Rasterizer
 {
 public:
 	Rasterizer();
+	Rasterizer(int w, int h);
 	~Rasterizer();
 	void renderScanline();
 private:
