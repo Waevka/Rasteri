@@ -2,9 +2,14 @@
 class Buffer
 {
 public:
+	unsigned int color;
+	float depth;
+	float width, height, minx, maxx, miny, maxy, len;
+
 	Buffer();
 	~Buffer();
-	ITgaSavable *TgaBuffer;
 	void setSize(int size);
+	void clearColor();
+	void clearDepth();
 };
 

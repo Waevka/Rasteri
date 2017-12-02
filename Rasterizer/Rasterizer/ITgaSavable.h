@@ -2,6 +2,6 @@
 class ITgaSavable
 {
 public:
-	virtual void save() = 0;
+	virtual bool save(Buffer buffer) = 0;
 };
 

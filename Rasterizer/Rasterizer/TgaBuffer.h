@@ -6,5 +6,6 @@ class TgaBuffer :
 public:
 	TgaBuffer();
 	~TgaBuffer();
+	bool save(Buffer buffer);
 };
 

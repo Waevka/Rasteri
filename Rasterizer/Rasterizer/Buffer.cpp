@@ -14,3 +14,11 @@ Buffer::~Buffer()
 void Buffer::setSize(int size)
 {
 }
+
+void Buffer::clearColor()
+{
+}
+
+void Buffer::clearDepth()
+{
+}

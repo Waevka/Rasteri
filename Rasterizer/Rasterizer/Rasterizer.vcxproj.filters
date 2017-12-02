@@ -22,6 +22,9 @@
     <Filter Include="Source Files\Buffer">
       <UniqueIdentifier>{7878391e-b908-4851-9810-2487a944d3f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{607b0ffe-2f54-49b1-8768-4e58be6a97ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -57,6 +60,15 @@
     <ClInclude Include="VertexProcessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WFloat4x4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WFloat3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WFloat4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -88,6 +100,15 @@
     </ClCompile>
     <ClCompile Include="VertexProcessor.cpp">
       <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="WFloat4x4.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="WFloat3.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="WFloat4.cpp">
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
