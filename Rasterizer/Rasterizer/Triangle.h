@@ -19,6 +19,6 @@ public:
 			float x3, float y3, float z3,
 			unsigned int _color);
 	~Triangle();
-	bool intersect(float x, float y);
+	HitInfo intersect(float x, float y);
 };
 

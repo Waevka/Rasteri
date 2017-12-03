@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="HitInfo.h" />
     <ClInclude Include="ITgaSavable.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Rasterizer.h" />
@@ -161,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="HitInfo.cpp" />
     <ClCompile Include="ITgaSavable.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />

@@ -53,14 +53,21 @@ Triangle::~Triangle()
 {
 }
 
-bool Triangle::intersect(float x, float y)
-{
-	float i1 = (x - vert2.x) * (vert1.y - vert2.y) - (vert1.x - vert2.x) * (y - vert2.y);
-	float i2 = (x - vert3.x) * (vert2.y - vert3.y) - (vert2.x - vert3.x) * (y - vert3.y);
-	float i3 = (x - vert1.x) * (vert3.y - vert1.y) - (vert3.x - vert1.x) * (y - vert1.y);
+HitInfo Triangle::intersect(float x, float y)
+{	
+	HitInfo hitInfo;
 
-	if (i1 > 0 && i2 > 0 && i3 > 0) {
-		return true;
+	float AB = (x - vert2.x) * (vert1.y - vert2.y) - (vert1.x - vert2.x) * (y - vert2.y);
+	float BC = (x - vert3.x) * (vert2.y - vert3.y) - (vert2.x - vert3.x) * (y - vert3.y);
+	float CA = (x - vert1.x) * (vert3.y - vert1.y) - (vert3.x - vert1.x) * (y - vert1.y);
+
+	if (AB > 0 && BC > 0 && CA > 0) {
+		hitInfo.hasHit = true;
+		float area = 1.0f / ((vert3.x - vert1.x) * (vert2.y - vert1.y) - (vert2.x - vert1.x) * (vert3.y - vert1.y));
+		hitInfo.area.x = BC * area;
+		hitInfo.area.y = CA * area;
+		hitInfo.area.z = AB * area;
 	}
-	return false;
+
+	return hitInfo;
 }

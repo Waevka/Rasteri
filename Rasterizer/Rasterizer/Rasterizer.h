@@ -10,5 +10,6 @@ private:
 	Buffer buffer;
 	ITgaSavable *tgaBuffer;
 	std::list<Model> models;
+	std::vector<Triangle> triangles;
 };
 
