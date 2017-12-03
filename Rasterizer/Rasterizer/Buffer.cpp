@@ -64,10 +64,10 @@ void Buffer::clear()
 	clearDepth();
 }
 
-void Buffer::writeColor(float x, float y, unsigned int _c, float d)
+void Buffer::writeColor(float x, float y, WColor _c, float d)
 {
 	this->depth[((int)width * (int)y) + (int)x] = d;
-	this->color[((int)width * (int)y) + (int)x] = _c;
+	this->color[((int)width * (int)y) + (int)x] = _c.value;
 }
 
 

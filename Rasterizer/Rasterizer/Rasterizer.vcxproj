@@ -156,6 +156,7 @@
     <ClInclude Include="TgaBuffer.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="VertexProcessor.h" />
+    <ClInclude Include="WColor.h" />
     <ClInclude Include="WFloat4x4.h" />
     <ClInclude Include="WFloat3.h" />
     <ClInclude Include="WFloat4.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="TgaBuffer.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="VertexProcessor.cpp" />
+    <ClCompile Include="WColor.cpp" />
     <ClCompile Include="WFloat4x4.cpp" />
     <ClCompile Include="WFloat3.cpp" />
     <ClCompile Include="WFloat4.cpp" />

@@ -75,6 +75,9 @@
     <ClInclude Include="HitInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WColor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -121,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="HitInfo.cpp">
       <Filter>Source Files\Rasterizer</Filter>
+    </ClCompile>
+    <ClCompile Include="WColor.cpp">
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -27,11 +27,11 @@ void Rasterizer::renderScanline()
 	Triangle triangle1(	{ 0.0f, 0.0f, 1.0f },
 						{ 1.0f, 0.0f, 0.5f }, 
 						{ 0.5f, 1.0f, 0.0f },
-						0xFFFFAA);
+						0x441100, 0x991100, 0xEE1100);
 	Triangle triangle2(	{ 0.0f, 0.0f, 0.0f },
 						{ 0.5f, 0.2f, 0.5f },
 						{ 0.3f, 0.8f, 1.0f },
-						0xFFAAAA);
+						0x004411, 0x009911, 0x00EE11);
 
 	triangles.push_back(triangle1);
 	triangles.push_back(triangle2);
@@ -61,9 +61,13 @@ void Rasterizer::renderScanline()
 					float depth = (trngl.vert1.z * hitInfo.area.x)
 						+ (trngl.vert2.z * hitInfo.area.y)
 						+ (trngl.vert3.z * hitInfo.area.z);
+					//interpolate the color between vertices
+					WColor color = (trngl.color1 * hitInfo.area.x)
+						+ (trngl.color2 * hitInfo.area.y)
+						+ (trngl.color3 * hitInfo.area.z);
 
 					if (i == 0 || depth < buffer.depth[(int)(buffer.width * y + x)]) {
-						buffer.writeColor(x, y, trngl.color, depth);
+						buffer.writeColor(x, y, color, depth);
 					}
 
 				}

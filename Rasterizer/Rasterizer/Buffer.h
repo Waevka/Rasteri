@@ -13,6 +13,6 @@ public:
 	void clearColor();
 	void clearDepth();
 	void clear();
-	void writeColor(float x, float y, unsigned int _c, float d);
+	void writeColor(float x, float y, WColor _c, float d);
 };
 

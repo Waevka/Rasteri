@@ -7,7 +7,7 @@ Triangle::Triangle()
 	vert1 = WFloat3(0.0f, 0.0f, 0.0f);
 	vert2 = WFloat3(2.0f, 0.0f, 0.0f);
 	vert3 = WFloat3(1.0f, 1.0f, 0.0f);
-	color = 0x000000;
+	color1 = color2 = color3 = 0x000000;
 }
 
 Triangle::Triangle(WFloat3 v1, WFloat3 v2, WFloat3 v3)
@@ -15,38 +15,25 @@ Triangle::Triangle(WFloat3 v1, WFloat3 v2, WFloat3 v3)
 	vert1 = v1;
 	vert2 = v2;
 	vert3 = v3;
-	color = 0x000000;
+	color1 = color2 = color3 = 0x000000;
 }
 
-Triangle::Triangle(WFloat3 v1, WFloat3 v2, WFloat3 v3, unsigned int _color)
+Triangle::Triangle(WFloat3 v1, WFloat3 v2, WFloat3 v3, WColor _color)
 {
 	vert1 = v1;
 	vert2 = v2;
 	vert3 = v3;
-	color = _color;
+	color1 = color2 = color3 = _color;
 }
 
-
-Triangle::Triangle(
-	float x1, float y1, float z1,
-	float x2, float y2, float z2,
-	float x3, float y3, float z3)
+Triangle::Triangle(WFloat3 v1, WFloat3 v2, WFloat3 v3, WColor _color1, WColor _color2, WColor _color3)
 {
-	vert1 = WFloat3(x1, y1, z1);
-	vert2 = WFloat3(x2, y2, z2);
-	vert3 = WFloat3(x3, y3, z3);
-	color = 0x000000;
-}
-
-Triangle::Triangle(float x1, float y1, float z1,
-	float x2, float y2, float z2,
-	float x3, float y3, float z3,
-	unsigned int _color)
-{
-	vert1 = WFloat3(x1, y1, z1);
-	vert2 = WFloat3(x2, y2, z2);
-	vert3 = WFloat3(x3, y3, z3);
-	color = _color;
+	vert1 = v1;
+	vert2 = v2;
+	vert3 = v3;
+	color1 = _color1;
+	color2 = _color2;
+	color3 = _color3;
 }
 
 Triangle::~Triangle()
