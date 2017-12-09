@@ -44,7 +44,7 @@ void Buffer::clearColor()
 {
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
-			color[((int)width * j) + i] = 0x000000;
+			color[((int)width * j) + i] = (unsigned int)1.0f;
 		}
 	}
 }
@@ -53,7 +53,7 @@ void Buffer::clearDepth()
 {
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
-			depth[((int)width * j) + i] = 0x000000;
+			depth[((int)width * j) + i] = (unsigned int)1.0f;
 		}
 	}
 }

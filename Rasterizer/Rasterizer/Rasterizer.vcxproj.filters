@@ -78,6 +78,12 @@
     <ClInclude Include="WColor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ObjMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WVertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -126,6 +132,12 @@
       <Filter>Source Files\Rasterizer</Filter>
     </ClCompile>
     <ClCompile Include="WColor.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjMesh.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="WVertex.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>

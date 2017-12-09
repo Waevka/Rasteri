@@ -3,7 +3,7 @@ class HitInfo
 {
 public:
 	bool hasHit;
-	WFloat3 area;
+	WFloat4 area;
 	HitInfo();
 	~HitInfo();
 };

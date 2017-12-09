@@ -147,6 +147,7 @@
     <ClInclude Include="HitInfo.h" />
     <ClInclude Include="ITgaSavable.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ObjMesh.h" />
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScanlineRasterizer.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="WFloat4x4.h" />
     <ClInclude Include="WFloat3.h" />
     <ClInclude Include="WFloat4.h" />
+    <ClInclude Include="WVertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
@@ -167,6 +169,7 @@
     <ClCompile Include="ITgaSavable.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ObjMesh.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
     <ClCompile Include="ScanlineRasterizer.cpp" />
     <ClCompile Include="ScanlineSimpleRasterizer.cpp" />
@@ -183,6 +186,7 @@
     <ClCompile Include="WFloat4x4.cpp" />
     <ClCompile Include="WFloat3.cpp" />
     <ClCompile Include="WFloat4.cpp" />
+    <ClCompile Include="WVertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Rasterizer.rc" />

@@ -4,36 +4,16 @@
 
 Triangle::Triangle()
 {
-	vert1 = WFloat3(0.0f, 0.0f, 0.0f);
-	vert2 = WFloat3(2.0f, 0.0f, 0.0f);
-	vert3 = WFloat3(1.0f, 1.0f, 0.0f);
-	color1 = color2 = color3 = 0x000000;
+	A = new WVertex();
+	B = new WVertex();
+	C = new WVertex();
 }
 
-Triangle::Triangle(WFloat3 v1, WFloat3 v2, WFloat3 v3)
+Triangle::Triangle(WVertex * _A, WVertex * _B, WVertex * _C)
 {
-	vert1 = v1;
-	vert2 = v2;
-	vert3 = v3;
-	color1 = color2 = color3 = 0x000000;
-}
-
-Triangle::Triangle(WFloat3 v1, WFloat3 v2, WFloat3 v3, WColor _color)
-{
-	vert1 = v1;
-	vert2 = v2;
-	vert3 = v3;
-	color1 = color2 = color3 = _color;
-}
-
-Triangle::Triangle(WFloat3 v1, WFloat3 v2, WFloat3 v3, WColor _color1, WColor _color2, WColor _color3)
-{
-	vert1 = v1;
-	vert2 = v2;
-	vert3 = v3;
-	color1 = _color1;
-	color2 = _color2;
-	color3 = _color3;
+	A = _A;
+	B = _B;
+	C = _C;
 }
 
 Triangle::~Triangle()
@@ -44,17 +24,29 @@ HitInfo Triangle::intersect(float x, float y)
 {	
 	HitInfo hitInfo;
 
-	float AB = (x - vert2.x) * (vert1.y - vert2.y) - (vert1.x - vert2.x) * (y - vert2.y);
-	float BC = (x - vert3.x) * (vert2.y - vert3.y) - (vert2.x - vert3.x) * (y - vert3.y);
-	float CA = (x - vert1.x) * (vert3.y - vert1.y) - (vert3.x - vert1.x) * (y - vert1.y);
+	float BCy = B->pos.y - C->pos.y;
+	float CBx = C->pos.x - B->pos.x;
+	float ACx = A->pos.x - C->pos.x;
+	float CAy = C->pos.y - A->pos.y;
+	float xc = x - C->pos.x;
+	float yc = y - C->pos.y;
 
-	if (AB > 0 && BC > 0 && CA > 0) {
-		hitInfo.hasHit = true;
-		float area = 1.0f / ((vert3.x - vert1.x) * (vert2.y - vert1.y) - (vert2.x - vert1.x) * (vert3.y - vert1.y));
-		hitInfo.area.x = BC * area;
-		hitInfo.area.y = CA * area;
-		hitInfo.area.z = AB * area;
+	float AB = (A->pos.x - B->pos.x) * (y - A->pos.y) - (A->pos.y - B->pos.y) * (x - A->pos.x); // P1, P2, P
+	float BC = (-CBx) * (y - B->pos.y) - (BCy) * (x - B->pos.x); // P2, P3, P
+	float CA = (-ACx) * (yc)-(CAy) * (xc); // P3, P1, P
+
+	hitInfo.hasHit = AB >= 0 && BC >= 0 && CA >= 0;
+
+	if (hitInfo.hasHit) {
+		float L1 = ((BCy * xc) + (CBx * yc)) / ((BCy *  ACx) + (CBx * (-CAy)));
+		float L2 = ((CAy * xc) + (ACx * yc)) / ((CAy *(-CBx)) + (ACx *   BCy));
+		float L3 = 1 - L1 - L2;
+
+		hitInfo.area.x = L1;
+		hitInfo.area.y = L2;
+		hitInfo.area.z = L3;
 	}
 
 	return hitInfo;
 }
+
