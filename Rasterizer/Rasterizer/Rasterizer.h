@@ -6,6 +6,7 @@ public:
 	Rasterizer(int w, int h);
 	~Rasterizer();
 	void renderScanline();
+	WFloat4 OX, OY, OZ;
 private:
 	Buffer buffer;
 	ITgaSavable *tgaBuffer;

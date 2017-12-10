@@ -41,9 +41,9 @@ ObjMesh::ObjMesh(std::string name)
 
 			if (identifier == "v") {
 
-				WVertex *v = new WVertex(std::stof(splitStrings[2]),
-					std::stof(splitStrings[4]),
-					std::stof(splitStrings[6]));
+				WVertex *v = new WVertex(std::stof(splitStrings[1]),
+					std::stof(splitStrings[2]),
+					std::stof(splitStrings[3]));
 
 				v->color = randomColor();
 				vertices.push_back(v);
@@ -51,17 +51,17 @@ ObjMesh::ObjMesh(std::string name)
 			} 
 			else if (identifier == "vn") {
 
-				WFloat4 n = {std::stof(splitStrings[2]),
-					std::stof(splitStrings[4]),
-					std::stof(splitStrings[6])};
+				WFloat4 n = {std::stof(splitStrings[1]),
+					std::stof(splitStrings[2]),
+					std::stof(splitStrings[3])};
 				normals.push_back(n);
 
 			}
 			else if (identifier == "vt") {
 
-				WFloat4 t = {std::stof(splitStrings[2]),
-					std::stof(splitStrings[4]),
-					std::stof(splitStrings[6])};
+				WFloat4 t = {std::stof(splitStrings[1]),
+					std::stof(splitStrings[2]),
+					std::stof(splitStrings[3])};
 				texcoords.push_back(t);
 
 			}
@@ -77,9 +77,9 @@ ObjMesh::ObjMesh(std::string name)
 
 			}
 			else if (identifier == "f") {
-				std::vector<std::string> f1 = splitString(splitStrings[2], '/');
-				std::vector<std::string> f2 = splitString(splitStrings[4], '/');
-				std::vector<std::string> f3 = splitString(splitStrings[6], '/');
+				std::vector<std::string> f1 = splitString(splitStrings[1], '/');
+				std::vector<std::string> f2 = splitString(splitStrings[2], '/');
+				std::vector<std::string> f3 = splitString(splitStrings[3], '/');
 
 				WVertex *a = vertices[stoi(f1[0]) - 1];
 				WVertex *b = vertices[stoi(f2[0]) - 1];
@@ -131,7 +131,11 @@ ObjMesh::ObjMesh(std::string name)
 }
 
 ObjMesh::ObjMesh(float a, float b, float c)
-{
+{	
+	Tv = { 0.0f, 0.0f, 0.0f };
+	Rv = { 0.0f, 0.0f, 0.0f };
+	Sv = { 1.0f, 1.0f, 1.0f };
+
 	WVertex *R = new WVertex(a, 0.0f, 0.0f);
 	WVertex *T = new WVertex(0.0f, b, 0.0f);
 	WVertex *B = new WVertex(0.0f, 0.0f, c);
