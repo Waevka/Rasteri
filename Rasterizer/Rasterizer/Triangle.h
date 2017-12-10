@@ -1,8 +1,7 @@
 #pragma once
-#include "Model.h"
-class Triangle :
-	public Model
-{
+
+
+class Triangle {
 public:
 	WVertex *A, *B, *C;
 	Triangle();

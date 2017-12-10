@@ -20,11 +20,17 @@ WVertex::~WVertex()
 WVertex WVertex::operator/=(float f)
 {
 	pos /= f;
+	normal /= f;
 	return *this;
 }
 
-WVertex WVertex::operator*=(WFloat4x4 matrix)
+WVertex WVertex::transform(WFloat4x4 matrix, WFloat4x4 mtrans)
 {
 	pos *= matrix;
+	pos /= pos.w;
+
+	normal *= mtrans;
+	normal /= normal.w;
+
 	return *this;
 }

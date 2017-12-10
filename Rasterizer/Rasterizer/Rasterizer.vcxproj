@@ -144,9 +144,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="FragmentProcessor.h" />
     <ClInclude Include="HitInfo.h" />
     <ClInclude Include="ITgaSavable.h" />
-    <ClInclude Include="Model.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="ObjMesh.h" />
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="resource.h" />
@@ -165,10 +166,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="FragmentProcessor.cpp" />
     <ClCompile Include="HitInfo.cpp" />
     <ClCompile Include="ITgaSavable.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Model.cpp" />
     <ClCompile Include="ObjMesh.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
     <ClCompile Include="ScanlineRasterizer.cpp" />

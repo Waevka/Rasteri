@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Math">
       <UniqueIdentifier>{607b0ffe-2f54-49b1-8768-4e58be6a97ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Light">
+      <UniqueIdentifier>{7b8366ed-1807-487b-9809-2eb86721146e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -37,9 +40,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScanlineSimpleRasterizer.h">
@@ -84,6 +84,12 @@
     <ClInclude Include="WVertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FragmentProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -98,9 +104,6 @@
     <ClCompile Include="ScanlineSimpleRasterizer.cpp">
       <Filter>Source Files\Rasterizer</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Rasterizer.cpp">
       <Filter>Source Files\Rasterizer</Filter>
     </ClCompile>
@@ -112,9 +115,6 @@
     </ClCompile>
     <ClCompile Include="TgaBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexProcessor.cpp">
-      <Filter>Source Files\Model</Filter>
     </ClCompile>
     <ClCompile Include="WFloat4x4.cpp">
       <Filter>Source Files\Math</Filter>
@@ -139,6 +139,15 @@
     </ClCompile>
     <ClCompile Include="WVertex.cpp">
       <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexProcessor.cpp">
+      <Filter>Source Files\Rasterizer</Filter>
+    </ClCompile>
+    <ClCompile Include="FragmentProcessor.cpp">
+      <Filter>Source Files\Rasterizer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,6 @@ public:
 	WVertex(float _x, float _y, float _z);
 	~WVertex();
 	WVertex operator /= (float f);
-	WVertex operator*=(WFloat4x4 matrix);
+	WVertex transform(WFloat4x4 matrix, WFloat4x4 mtrans);
 };
 

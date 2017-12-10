@@ -8,9 +8,10 @@ public:
 	void renderScanline();
 	WFloat4 OX, OY, OZ;
 private:
+	VertexProcessor vertexProcessor;
+	FragmentProcessor fragmentProcessor;
 	Buffer buffer;
 	ITgaSavable *tgaBuffer;
-	std::list<Model> models;
 	std::vector<Triangle> triangles;
 };
 

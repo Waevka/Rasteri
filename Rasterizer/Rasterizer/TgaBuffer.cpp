@@ -32,7 +32,7 @@ bool TgaBuffer::save(Buffer buffer) {
 		for (int j = 0; j < 256; j++) {
 			unsigned int color = buffer.color[((int)buffer.width * i) + j];
 			file.write((const char*)&color, sizeof(unsigned int));
-			unsigned int depthInt = 127 - (127 * buffer.depth[((int)buffer.width * i) + j]);
+			unsigned int depthInt = 255 - (255 * buffer.depth[((int)buffer.width * i) + j]);
 			unsigned int depth = depthInt + (depthInt << 8) + (depthInt << 16) + (depthInt << 24);
 			file2.write((const char*)&depth, sizeof(unsigned int));
 		}

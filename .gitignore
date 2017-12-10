@@ -302,3 +302,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 Rasterizer/Rasterizer/render.tga
+Rasterizer/Rasterizer/renderDepth.tga

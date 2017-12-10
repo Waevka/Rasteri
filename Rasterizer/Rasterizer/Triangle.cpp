@@ -31,16 +31,16 @@ HitInfo Triangle::intersect(float x, float y)
 	float xc = x - C->pos.x;
 	float yc = y - C->pos.y;
 
-	float AB = (A->pos.x - B->pos.x) * (y - A->pos.y) - (A->pos.y - B->pos.y) * (x - A->pos.x); // P1, P2, P
-	float BC = (-CBx) * (y - B->pos.y) - (BCy) * (x - B->pos.x); // P2, P3, P
-	float CA = (-ACx) * (yc)-(CAy) * (xc); // P3, P1, P
+	double AB = (A->pos.x - B->pos.x) * (y - A->pos.y) - (A->pos.y - B->pos.y) * (x - A->pos.x); // P1, P2, P
+	double BC = (-CBx) * (y - B->pos.y) - (BCy) * (x - B->pos.x); // P2, P3, P
+	double CA = (-ACx) * (yc)-(CAy) * (xc); // P3, P1, P
 
 	hitInfo.hasHit = AB >= 0 && BC >= 0 && CA >= 0;
 
 	if (hitInfo.hasHit) {
-		float L1 = ((BCy * xc) + (CBx * yc)) / ((BCy *  ACx) + (CBx * (-CAy)));
-		float L2 = ((CAy * xc) + (ACx * yc)) / ((CAy *(-CBx)) + (ACx *   BCy));
-		float L3 = 1 - L1 - L2;
+		double L1 = ((BCy * xc) + (CBx * yc)) / ((BCy *  ACx) + (CBx * (-CAy)));
+		double L2 = ((CAy * xc) + (ACx * yc)) / ((CAy *(-CBx)) + (ACx *   BCy));
+		double L3 = 1 - L1 - L2;
 
 		hitInfo.area.x = L1;
 		hitInfo.area.y = L2;
