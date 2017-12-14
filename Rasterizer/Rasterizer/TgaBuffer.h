@@ -5,8 +5,7 @@ class TgaBuffer :
 {
 public:
 	TgaBuffer();
-	TgaBuffer(int w, int h);
 	~TgaBuffer();
-	bool save(Buffer buffer);
+	bool writeToFile(Buffer buffer);
 };
 

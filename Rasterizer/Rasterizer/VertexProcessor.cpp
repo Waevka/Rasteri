@@ -52,12 +52,12 @@ void VertexProcessor::setPerspective(float fov, float ratio, float near, float f
 
 		ratio = 1.0f / ratio;
 
-		WFloat4x4 Persp = { { f * ratio, 0, 0, 0 },
+		WFloat4x4 Perspective = { { f * ratio, 0, 0, 0 },
 							{ 0, f, 0, 0 },
 							{ 0, 0, (far + near) * inv,  (2 * far * near) * inv },
 							{ 0, 0, -1, 0 } };
 
-		P = Persp;
+		P = Perspective;
 	}
 }
 
@@ -141,7 +141,6 @@ void VertexProcessor::transform()
 
 	for (int i = 0; i < lights.size(); i++)
 	{
-		lights[i]->operator*=(MVP);
-
+		(*lights[i]) *= (MVP);
 	}
 }

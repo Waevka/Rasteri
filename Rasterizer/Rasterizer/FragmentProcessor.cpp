@@ -13,31 +13,51 @@ FragmentProcessor::~FragmentProcessor()
 
 void FragmentProcessor::processTriangle(Buffer & buffer)
 {
-	float stepx = 1.0 / buffer.width;
-	float stepy = 1.0 / buffer.height;
-
+	//set up buffer min max values
 	minmax(buffer.minx, buffer.miny, buffer.maxx, buffer.maxy);
+	//calculate size between each pixel
+	float deltaX = 1.0 / buffer.width;
+	float deltaY = 1.0 / buffer.height;
 
-	for (float x = buffer.minx; x < buffer.maxx; x += stepx)
+	for (float x = buffer.minx; x < buffer.maxx; x += deltaX)
 	{
-		for (float y = buffer.miny; y < buffer.maxy; y += stepy)
-		{
-			HitInfo hitInfo = trngl->intersect(x, y);
+		for (float y = buffer.miny; y < buffer.maxy; y += deltaY)
+		{	
+			//keep hit info in a structure
+			HitInfo hitInfo = trngl->intersectTriangle(x, y);
 			if (hitInfo.hasHit) {
-				float depth = (trngl->A->pos.z * hitInfo.area.x)
-					+ (trngl->B->pos.z * hitInfo.area.y)
-					+ (trngl->C->pos.z * hitInfo.area.z);
-				//interpolate the color between vertices
-				if (depth >= 0 && depth <= 1)
-				{
-					int x1 = (x + 1) * buffer.width * 0.5f;
-					int	y1 = (y + 1) * buffer.height * 0.5f;
-					bool b1 = (depth < buffer.depth[(int)(buffer.width * y1 + x1)]);
-					bool b2 = buffer.depth[(int)(buffer.width * y1 + x1)] == 1;
-					if (b1 || b2)
+
+				float currentDepth = trngl->A->pos.z * hitInfo.hitPoint.x
+					+ trngl->B->pos.z * hitInfo.hitPoint.y
+					+ trngl->C->pos.z * hitInfo.hitPoint.z;
+
+				if (currentDepth <= 1 && currentDepth >= 0)
+				{	
+					// use halfpixel
+					int xDel = buffer.width * 0.5f * (x + 1);
+					int	yDel = buffer.height * 0.5f * (y + 1);
+
+					//first test
+					bool depthTest1;
+					if (currentDepth < buffer.depth[(int)(buffer.width * yDel + xDel)]) {
+						depthTest1 = true;
+					}
+					else {
+						depthTest1 = false;
+					}
+					//second test
+					bool depthTest2; 
+					if (buffer.depth[(int)(buffer.width * yDel + xDel)] == 1) {
+						depthTest2 = true;
+					}
+					else {
+						depthTest2 = false;
+					}
+
+					if (depthTest1 || depthTest2)
 					{
-						WColor color = shade(hitInfo);
-						buffer.writeColor(x1, y1, color, depth);
+						WColor color = processColor(hitInfo);
+						buffer.writeColor(xDel, yDel, color, currentDepth);
 					}
 				}
 			}
@@ -45,40 +65,42 @@ void FragmentProcessor::processTriangle(Buffer & buffer)
 	}
 }
 
-WColor FragmentProcessor::shade(HitInfo hi)
+WColor FragmentProcessor::processColor(HitInfo hi)
 {
-	WColor ambientMaterial = (trngl->A->color * hi.area.x
-		+ trngl->B->color * hi.area.y
-		+ trngl->C->color * hi.area.z);
+	WColor ambientMaterial = (trngl->A->color * hi.hitPoint.x
+							+ trngl->B->color * hi.hitPoint.y
+							+ trngl->C->color * hi.hitPoint.z);
 
 	WColor result = 0xFF000000;
 	WColor ambient = 0;
 	WColor diffuse = 0;
 	WColor specular = 0;
 
-	WFloat4 hitPoint(trngl->A->pos * hi.area.x 
-		+ trngl->B->pos * hi.area.y 
-		+ trngl->C->pos * hi.area.z);
+	WFloat4 hitPoint(trngl->A->pos * hi.hitPoint.x 
+					+ trngl->B->pos * hi.hitPoint.y 
+					+ trngl->C->pos * hi.hitPoint.z);
 
-	WFloat4 normal(trngl->A->normal * hi.area.x 
-		+ trngl->B->normal * hi.area.y
-		+ trngl->C->normal * hi.area.z);
+	WFloat4 normal(trngl->A->normal * hi.hitPoint.x 
+					+ trngl->B->normal * hi.hitPoint.y
+					+ trngl->C->normal * hi.hitPoint.z);
+
 	normal = normal.normalize();
 
 	for (int i = 0; i < lights.size(); i++)
 	{
 		Light *light = lights[i];
-
+		WFloat4 lightDirection = light->getDirection(hitPoint);
+		lightDirection = lightDirection.normalize();
+		//diffuse
+		float dotN = std::max(0.0f, std::min(WFloat4::dotProduct(lightDirection, normal), 1.0f));
+		diffuse = diffuse + (ambientMaterial * light->getDiffuse() * dotN);
+		result = result + diffuse;
+		//ambient
 		ambient = ambient + light->getAmbient();
-
-		WFloat4 lightVec = light->getVector(hitPoint);
-		lightVec = lightVec.normalize();
-
-		float LdotN = std::min(WFloat4::dotProduct(lightVec, normal), 1.0f);
-		diffuse + (ambientMaterial * light->getDiffuse() * std::max(0.0f, LdotN));
-
+		result = result + ambient;
+		//specular
 		specular = specular + light->getSpecular();
-		result = result + ambient + diffuse + specular;
+		result = result + specular;
 	}
 
 	return result;
@@ -86,7 +108,6 @@ WColor FragmentProcessor::shade(HitInfo hi)
 
 void FragmentProcessor::minmax(float & minx, float & miny, float & maxx, float & maxy)
 {
-	//define minmax values for canvas
 	maxx = (trngl->A->pos.x > trngl->B->pos.x) ? trngl->A->pos.x : trngl->B->pos.x;
 	maxx = (maxx > trngl->C->pos.x) ? maxx : trngl->C->pos.x;
 

@@ -17,10 +17,10 @@ ObjMesh::ObjMesh(std::string name)
 	Rv = { 0.0f, 0.0f, 0.0f };
 	Sv = { 1.0f, 1.0f, 1.0f };
 
-	std::string line;
-	std::vector<WFloat4> normals;
-	std::vector<WFloat4> texcoords;
+	std::string currentLine;
 	std::vector<WColor> colors;
+	std::vector<WFloat4> normals;
+	std::vector<WFloat4> uvs;
 
 	std::ifstream file;
 	file.open(name);
@@ -31,12 +31,15 @@ ObjMesh::ObjMesh(std::string name)
 
 	while (!file.eof()) {
 
-		std::getline(file, line);
+		std::getline(file, currentLine);
 		//std::cout << line << std::endl;
-		std::vector<std::string> splitStrings = splitString(line, ' ');
+		std::vector<std::string> splitStrings = splitString(currentLine, ' ');
 
 		if (!splitStrings.empty()) {
 
+			//first characters identify line
+			//INDICES 1, 2, 3 - VERIFIED FOR BLENDER .OBJ FILES!
+			//Might not work with other exporters.
 			std::string identifier = splitStrings[0];
 
 			if (identifier == "v") {
@@ -62,18 +65,7 @@ ObjMesh::ObjMesh(std::string name)
 				WFloat4 t = {std::stof(splitStrings[1]),
 					std::stof(splitStrings[2]),
 					std::stof(splitStrings[3])};
-				texcoords.push_back(t);
-
-			}
-			else if (identifier == "c") {
-
-				std::string s = splitStrings[1];
-				unsigned int color;
-				std::stringstream ss;
-				ss << std::hex << s;
-				ss >> color;
-				WColor c = { color };
-				colors.push_back(c);
+				uvs.push_back(t);
 
 			}
 			else if (identifier == "f") {
@@ -81,18 +73,20 @@ ObjMesh::ObjMesh(std::string name)
 				std::vector<std::string> f2 = splitString(splitStrings[2], '/');
 				std::vector<std::string> f3 = splitString(splitStrings[3], '/');
 
-				WVertex *a = vertices[stoi(f1[0]) - 1];
-				WVertex *b = vertices[stoi(f2[0]) - 1];
-				WVertex *c = vertices[stoi(f3[0]) - 1];
+				WVertex *x = vertices[stoi(f1[0]) - 1];
+				WVertex *y = vertices[stoi(f2[0]) - 1];
+				WVertex *z = vertices[stoi(f3[0]) - 1];
 
 				WFloat4 atx;
 				WFloat4 btx;
 				WFloat4 ctx;
+
 				if (f1[1] != "") {
-					atx = texcoords[stoi(f1[1]) - 1];
-					btx = texcoords[stoi(f1[1]) - 1];
-					ctx = texcoords[stoi(f1[1]) - 1];
-				} else {
+					atx = uvs[stoi(f1[1]) - 1];
+					btx = uvs[stoi(f1[1]) - 1];
+					ctx = uvs[stoi(f1[1]) - 1];
+				}
+				else {
 					atx = { 0.0f, 0.0f, 0.0f };
 					btx = { 0.0f, 0.0f, 0.0f };
 					ctx = { 0.0f, 0.0f, 0.0f };
@@ -102,62 +96,42 @@ ObjMesh::ObjMesh(std::string name)
 				WFloat4 bn = normals[stoi(f1[2]) - 1];
 				WFloat4 cn = normals[stoi(f1[2]) - 1];
 
-				a->normal = an;
-				b->normal = bn;
-				c->normal = cn;
-				a->uv = atx;
-				b->uv = btx;
-				c->uv = ctx;
+				x->normal = an;
+				y->normal = bn;
+				z->normal = cn;
+				x->uv = atx;
+				y->uv = btx;
+				z->uv = ctx;
 
-				Triangle *t = new Triangle(a, b, c);
-				triangles.push_back(t);
+				Triangle *trngl = new Triangle(x, y, z);
+				triangles.push_back(trngl);
+			}
+			else if (identifier == "c") {
+
+				std::string s = splitStrings[1];
+				unsigned int color;
+				std::stringstream ss;
+				ss << std::hex << s;
+				ss >> color;
+				WColor c = color;
+				colors.push_back(c);
+
 			}
 			else if (identifier == "cf") {
 				std::vector<std::string> cf = splitString(splitStrings[1], '/');
 
-				Triangle *t = triangles[stoi(cf[0]) - 1];
+				Triangle *trngl = triangles[stoi(cf[0]) - 1];
 				WColor c = colors[stoi(cf[0]) - 1];
 
-				t->A->color = c;
-				t->B->color = c;
-				t->C->color = c;
+				trngl->A->color = c;
+				trngl->B->color = c;
+				trngl->C->color = c;
 			}
 			else if (identifier == "#") {
-				std::cout << "Found comment: " << line << std::endl;
+				std::cout << "Found comment: " << currentLine << std::endl;
 			}
 		}
 	}
-
-}
-
-ObjMesh::ObjMesh(float a, float b, float c)
-{	
-	Tv = { 0.0f, 0.0f, 0.0f };
-	Rv = { 0.0f, 0.0f, 0.0f };
-	Sv = { 1.0f, 1.0f, 1.0f };
-
-	WVertex *R = new WVertex(a, 0.0f, 0.0f);
-	WVertex *T = new WVertex(0.0f, b, 0.0f);
-	WVertex *B = new WVertex(0.0f, 0.0f, c);
-	WVertex *L = new WVertex(0.0f, 0.0f, 0.0f);
-
-	R->color = 0xFFFF0000;
-	T->color = 0xFF00FF00;
-	L->color = 0xFF0000FF;
-	B->color = 0xFFFFFFFF;
-
-	vertices.push_back(R);
-	vertices.push_back(T);
-	vertices.push_back(B);
-	vertices.push_back(L);
-
-	Triangle *front = new Triangle(L, T, R);
-	Triangle *side = new Triangle(B, T, L);
-	Triangle *bottom = new Triangle(B, L, R);
-
-	triangles.push_back(front);
-	triangles.push_back(side);
-	triangles.push_back(bottom);
 
 }
 

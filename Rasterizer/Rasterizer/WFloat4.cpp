@@ -113,7 +113,7 @@ float WFloat4::invSqrt(float n)
 	long i;
 	float x2, y;
 	const float threehalfs = 1.5F;
-	//:P
+	//Hello Doom
 	x2 = n * 0.5F;
 	y = n;
 	i = *(long *)&y;

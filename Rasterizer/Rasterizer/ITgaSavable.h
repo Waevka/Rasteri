@@ -2,6 +2,6 @@
 class ITgaSavable
 {
 public:
-	virtual bool save(Buffer buffer) = 0;
+	virtual bool writeToFile(Buffer buffer) = 0;
 };
 

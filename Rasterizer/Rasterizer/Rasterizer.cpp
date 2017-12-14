@@ -95,7 +95,7 @@ void Rasterizer::renderScanline()
 		}
 	}	
 
-	bool success = tgaBuffer->save(buffer);
+	bool success = tgaBuffer->writeToFile(buffer);
 	if (!success) {
 		std::cout << "FAIL: There was a problem while saving to tga file. :(";
 	}

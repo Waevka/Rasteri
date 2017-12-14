@@ -3,7 +3,6 @@ class ObjMesh
 {
 public:
 	ObjMesh(std::string name);
-	ObjMesh(float a, float b, float c);
 	~ObjMesh(); 
 	std::vector<std::string> splitString(std::string string, char separator);
 	std::vector<WVertex*> vertices;

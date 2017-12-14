@@ -8,7 +8,7 @@ public:
 	~FragmentProcessor();
 	void processTriangle(Buffer &buffer);
 private:
-	WColor shade(HitInfo hi);
+	WColor processColor(HitInfo hi);
 	void minmax(float &minx, float &miny, float &maxx, float &maxy);
 };
 

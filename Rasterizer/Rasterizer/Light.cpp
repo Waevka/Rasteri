@@ -15,7 +15,7 @@ Light::~Light()
 {
 }
 
-WFloat4 Light::getVector(WFloat4 dir)
+WFloat4 Light::getDirection(WFloat4 dir)
 {
 	if (o.w == 0.0f) {
 		return d;

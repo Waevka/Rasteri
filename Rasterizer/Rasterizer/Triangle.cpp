@@ -20,7 +20,7 @@ Triangle::~Triangle()
 {
 }
 
-HitInfo Triangle::intersect(float x, float y)
+HitInfo Triangle::intersectTriangle(float x, float y)
 {	
 	HitInfo hitInfo;
 
@@ -42,9 +42,9 @@ HitInfo Triangle::intersect(float x, float y)
 		double L2 = ((CAy * xc) + (ACx * yc)) / ((CAy *(-CBx)) + (ACx *   BCy));
 		double L3 = 1 - L1 - L2;
 
-		hitInfo.area.x = L1;
-		hitInfo.area.y = L2;
-		hitInfo.area.z = L3;
+		hitInfo.hitPoint.x = L1;
+		hitInfo.hitPoint.y = L2;
+		hitInfo.hitPoint.z = L3;
 	}
 
 	return hitInfo;
