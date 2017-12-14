@@ -4,10 +4,10 @@
 
 Buffer::Buffer()
 {
-	width = 256;
-	height = 256;
-	color = new unsigned int[256*256];
-	depth = new float[256*256];
+	width = 1024;
+	height = 1024;
+	color = new unsigned int[1024 * 1024];
+	depth = new float[1024 * 1024];
 	clear();
 }
 

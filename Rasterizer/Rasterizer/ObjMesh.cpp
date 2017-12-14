@@ -32,7 +32,7 @@ ObjMesh::ObjMesh(std::string name)
 	while (!file.eof()) {
 
 		std::getline(file, line);
-		std::cout << line << std::endl;
+		//std::cout << line << std::endl;
 		std::vector<std::string> splitStrings = splitString(line, ' ');
 
 		if (!splitStrings.empty()) {

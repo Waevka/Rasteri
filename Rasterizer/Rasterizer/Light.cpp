@@ -42,3 +42,33 @@ Light Light::operator/=(float f)
 	d /= f;
 	return *this;
 }
+
+void Light::setDiffuse(unsigned int c)
+{
+	this->diffuse = c;
+}
+
+void Light::setSpecular(unsigned int c)
+{
+	this->specular = c;
+}
+
+void Light::setAmbient(unsigned int c)
+{
+	this->ambient = c;
+}
+
+WColor Light::getDiffuse()
+{
+	return this->diffuse;
+}
+
+WColor Light::getSpecular()
+{
+	return specular;
+}
+
+WColor Light::getAmbient()
+{
+	return ambient;
+}

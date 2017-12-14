@@ -52,7 +52,6 @@ WColor FragmentProcessor::shade(HitInfo hi)
 		+ trngl->C->color * hi.area.z);
 
 	WColor result = 0xFF000000;
-
 	WColor ambient = 0;
 	WColor diffuse = 0;
 	WColor specular = 0;
@@ -70,20 +69,17 @@ WColor FragmentProcessor::shade(HitInfo hi)
 	{
 		Light *light = lights[i];
 
-		ambient + light->ambient;
+		ambient = ambient + light->getAmbient();
 
 		WFloat4 lightVec = light->getVector(hitPoint);
 		lightVec = lightVec.normalize();
 
 		float LdotN = std::min(WFloat4::dotProduct(lightVec, normal), 1.0f);
-		diffuse + (ambientMaterial * light->diffuse * std::max(0.0f, LdotN));
+		diffuse + (ambientMaterial * light->getDiffuse() * std::max(0.0f, LdotN));
 
-		specular + light->specular;
+		specular = specular + light->getSpecular();
 		result = result + ambient + diffuse + specular;
 	}
-	//                result = (color{0xFFFFFFFF} * ((normal*float4(0.5,0.5,0.5,1))+float4(0.5,0.5,0.5,0)));
-	//            diffuse = (color{0xFFFFFFFF} * ((hitPoint*float4(0.5,0.5,1.0,1))+float4(0.5,0.5,0.0,0)));
-
 
 	return result;
 }

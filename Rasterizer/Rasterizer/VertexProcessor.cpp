@@ -11,6 +11,20 @@ VertexProcessor::~VertexProcessor()
 {
 }
 
+void VertexProcessor::processTransformations(ObjMesh *mesh, WFloat4 OX, WFloat4 OY, WFloat4 OZ, std::vector<Light*> lights)
+{
+	vertices = mesh->vertices;
+	this->lights = lights;
+
+	multByTrans(mesh->Tv);
+	multByRot(mesh->Rv.x, OX);
+	multByRot(mesh->Rv.y, OY);
+	multByRot(mesh->Rv.z, OZ);
+	multByScale(mesh->Sv);
+	transform();
+
+}
+
 void VertexProcessor::tr()
 {
 }
@@ -23,15 +37,24 @@ void VertexProcessor::setPerspective(float fov, float ratio, float near, float f
 {
 	if (far != near) {
 
-		float f_n = 1.0f / (near - far);
+		float inv = 1.0f / (near - far);
 		fov *= M_PI / 360;
 		float s = std::sin(fov);
-		float f = s != 0 ? std::cos(fov) / s : std::cos(fov) / 0.0001f;
+		float f;
+
+		if (s != 0) {
+			f = std::cos(fov) / s;
+		}
+		else 
+		{ 
+			f = std::cos(fov) / 0.0001f;
+		}
+
 		ratio = 1.0f / ratio;
 
-		WFloat4x4 Persp = { { f*ratio, 0, 0, 0 },
+		WFloat4x4 Persp = { { f * ratio, 0, 0, 0 },
 							{ 0, f, 0, 0 },
-							{ 0, 0, (far + near)*f_n,  (2 * far*near)*f_n },
+							{ 0, 0, (far + near) * inv,  (2 * far * near) * inv },
 							{ 0, 0, -1, 0 } };
 
 		P = Persp;
@@ -58,7 +81,7 @@ void VertexProcessor::lookAt(WFloat4 up, WFloat4 eye, WFloat4 target)
 	V = Rot * Mov;
 }
 
-void VertexProcessor::translate(WFloat4 v)
+void VertexProcessor::multByTrans(WFloat4 v)
 {
 	WFloat4x4 T = { { 1, 0, 0, v.x },
 				{ 0, 1, 0, v.y },
@@ -67,23 +90,30 @@ void VertexProcessor::translate(WFloat4 v)
 	M = T * M;
 }
 
-void VertexProcessor::rotate(float a, WFloat4 v)
+void VertexProcessor::multByRot(float a, WFloat4 v)
 {
-	float rad = M_PI / 180.0f;
-
-	float s = std::sin(a*rad), c = std::cos(a*rad);
-
+	float radians = M_PI / 180.0f;
+	float s = std::sin(a * radians);
+	float c = std::cos(a * radians);
 	v = v.normalize();
 
-	WFloat4x4 R = { { v.x*v.x*(1 - c) + c, v.x*v.y*(1 - c) - v.z*s, v.x*v.z*(1 - c) + v.y*s, 0 },
-					{ v.x*v.y*(1 - c) + v.z*s,  v.y*v.y*(1 - c) + c, v.z*v.y*(1 - c) - v.x*s, 0 },
-					{ v.x*v.z*(1 - c) - v.y*s, v.z*v.y*(1 - c) + v.x*s, v.z*v.z*(1 - c) + c , 0 },
+	WFloat4x4 R = { { v.x * v.x * (1 - c) + c,
+					v.x * v.y * (1 - c) - v.z * s,
+					v.x * v.z * (1 - c) + v.y * s,
+					0 },
+					{ v.x * v.y * (1 - c) + v.z * s,
+					v.y * v.y * (1 - c) + c,
+					v.z * v.y * (1 - c) - v.x * s,
+					0 },
+					{ v.x * v.z * (1 - c) - v.y * s,
+					v.z * v.y * (1 - c) + v.x * s,
+					v.z * v.z * (1 - c) + c ,
+					0 },
 					{ 0, 0 , 0 , 1 } };
-
 	M = R * M;
 }
 
-void VertexProcessor::scale(WFloat4 v)
+void VertexProcessor::multByScale(WFloat4 v)
 {
 	WFloat4x4 S = { { v.x, 0,   0,   0 },
 					{ 0,   v.y, 0,   0 },
@@ -99,38 +129,19 @@ void VertexProcessor::setIdentity()
 	P = WFloat4x4::identity();
 }
 
-void VertexProcessor::multByTrans()
-{
-}
-
-void VertexProcessor::multByRot()
-{
-}
-
 void VertexProcessor::transform()
 {
 	WFloat4x4 MVP = P * V * M;
 	WFloat4x4 MVT = MVP.transpose();
 
-	for (int i = 0; i < vertexBuffer.size(); i++)
+	for (int i = 0; i < vertices.size(); i++)
 	{	
-		std::cout << "Before: " << vertexBuffer[i]->pos.x << " "
-			<< vertexBuffer[i]->pos.y << " "
-			<< vertexBuffer[i]->pos.z << " "
-			<< vertexBuffer[i]->pos.w << std::endl;
-
-		vertexBuffer[i]->transform(MVP, MVT);
-
-		std::cout << "After: " << vertexBuffer[i]->pos.x << " "
-			<< vertexBuffer[i]->pos.y << " "
-			<< vertexBuffer[i]->pos.z << " "
-			<< vertexBuffer[i]->pos.w << std::endl;
-
+		vertices[i]->transform(MVP, MVT);
 	}
 
-	for (int i = 0; i < lightBuffer.size(); i++)
+	for (int i = 0; i < lights.size(); i++)
 	{
-		lightBuffer[i]->operator*=(MVP);
+		lights[i]->operator*=(MVP);
 
 	}
 }
