@@ -17,8 +17,8 @@ public:
 	void setDiffuse(unsigned int c);
 	void setSpecular(unsigned int c);
 	void setAmbient(unsigned int c);
-	WColor getDiffuse();
-	WColor getSpecular();
-	WColor getAmbient();
+	WColor* getDiffuse();
+	WColor* getSpecular();
+	WColor* getAmbient();
 };
 

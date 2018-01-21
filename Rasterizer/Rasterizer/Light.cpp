@@ -58,17 +58,17 @@ void Light::setAmbient(unsigned int c)
 	this->ambient = c;
 }
 
-WColor Light::getDiffuse()
+WColor* Light::getDiffuse()
 {
-	return this->diffuse;
+	return &(this->diffuse);
 }
 
-WColor Light::getSpecular()
+WColor* Light::getSpecular()
 {
-	return specular;
+	return &specular;
 }
 
-WColor Light::getAmbient()
+WColor* Light::getAmbient()
 {
-	return ambient;
+	return &ambient;
 }

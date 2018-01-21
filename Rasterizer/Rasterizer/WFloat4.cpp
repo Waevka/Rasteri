@@ -10,6 +10,11 @@ WFloat4::WFloat4()
 	w = 1.0f;
 }
 
+WFloat4::WFloat4(__m128 m)
+{
+	this->m = m;
+}
+
 
 WFloat4::WFloat4(float _x, float _y, float _z)
 {
@@ -29,9 +34,10 @@ WFloat4::WFloat4(float _x, float _y, float _z, float _w)
 
 WFloat4::WFloat4(WFloat4 u, WFloat4 v)
 {
-	x = v.x - u.x;
-	y = v.y - u.y;
-	z = v.z - u.z;
+	m = _mm_sub_ps(v.m, u.m);
+	//x = v.x - u.x;
+	//y = v.y - u.y;
+	//z = v.z - u.z;
 	w = 1.0f;
 }
 
@@ -48,35 +54,43 @@ WFloat4 WFloat4::operator*=(WFloat4x4 matrix)
 
 WFloat4 WFloat4::operator*(float f)
 {
-	WFloat4 r(*this);
-	r.y *= f;
-	r.z *= f;
-	r.x *= f;
-	r.w *= f;
+	//WFloat4 r(*this);
+	//r.y *= f;
+	//r.z *= f;
+	//r.x *= f;
+	//r.w *= f;
 
-	return r;
+	//return WFloat4(x *f, y *f, z*f, w*f);
+	return WFloat4(_mm_mul_ps(m, _mm_set1_ps(f)));
 }
 
 WFloat4 WFloat4::operator*(WFloat4 f)
 {
-	WFloat4 r(*this);
-	r.y *= f.y;
-	r.z *= f.z;
-	r.x *= f.x;
-	r.w *= f.w;
+	//WFloat4 r(*this);
+	//r.y *= f.y;
+	//r.z *= f.z;
+	//r.x *= f.x;
+	//r.w *= f.w;
+	//return WFloat4(x * f.x, y *f.y, z*f.z, w*f.w);
+	return WFloat4(_mm_mul_ps(m, f.m));
+	//return r;
+}
 
-	return r;
+__m128 WFloat4::operator+(__m128 f)
+{
+	return _mm_add_ps(m, f);
 }
 
 WFloat4 WFloat4::operator+(WFloat4 f)
 {
-	WFloat4 r(*this);
-	r.y += f.y;
-	r.z += f.z;
-	r.x += f.x;
-	r.w += f.w;
+	//WFloat4 r(*this);
+	//r.y += f.y;
+	//r.z += f.z;
+	//r.x += f.x;
+	//r.w += f.w;
 
-	return r;
+	//return r;
+	return WFloat4(_mm_add_ps(m, f.m));
 }
 
 WFloat4 WFloat4::operator/=(float f)
@@ -104,8 +118,22 @@ WFloat4 WFloat4::normalize()
 		x *= length;
 		y *= length;
 		z *= length;
+		//m = _mm_div_ps(m, _mm_sqrt_ps(_mm_dp_ps(m, m, 0x7F)));
 	}
 	return *this;
+}
+
+void WFloat4::normalizeSSE()
+{
+	float length = len2();
+	if (length != 0)
+	{
+		//length = invSqrt(length);
+		//x *= length;
+		//y *= length;
+		//z *= length;
+		m = _mm_mul_ps(m, _mm_rsqrt_ps(_mm_dp_ps(m, m, 0x77)));
+	}
 }
 
 float WFloat4::invSqrt(float n)
@@ -133,7 +161,7 @@ float WFloat4::len2()
 	return (x*x) + (y*y) + (z*z);
 }
 
-WFloat4 WFloat4::crossProduct(WFloat4 u, WFloat4 v)
+WFloat4 WFloat4::crossProduct(WFloat4& u, WFloat4& v)
 {
 	return WFloat4((u.y*v.z) - (u.z*v.y),
 		(u.z*v.x) - (u.x*v.z),
@@ -143,6 +171,11 @@ WFloat4 WFloat4::crossProduct(WFloat4 u, WFloat4 v)
 float WFloat4::dotProduct(WFloat4 u, WFloat4 v)
 {
 	return (u.x*v.x) + (u.y*v.y) + (u.z*v.z);
+}
+
+float WFloat4::dotProductSSE(WFloat4 & rhs)
+{
+	return _mm_cvtss_f32(_mm_dp_ps(m, rhs.m, 0x71));
 }
 
 WFloat4::~WFloat4()

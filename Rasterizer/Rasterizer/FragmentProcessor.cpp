@@ -72,35 +72,39 @@ WColor FragmentProcessor::processColor(HitInfo hi)
 							+ trngl->C->color * hi.hitPoint.z);
 
 	WColor result = 0xFF000000;
-	WColor ambient = 0;
-	WColor diffuse = 0;
-	WColor specular = 0;
+	WColor ambient(0);
+	WColor diffuse(0);
+	WColor specular(0);
 
-	WFloat4 hitPoint(trngl->A->pos * hi.hitPoint.x 
+	/*WFloat4 hitPoint(trngl->A->pos * hi.hitPoint.x 
 					+ trngl->B->pos * hi.hitPoint.y 
-					+ trngl->C->pos * hi.hitPoint.z);
+					+ trngl->C->pos * hi.hitPoint.z);*/
+	
+	hitPoint.m = _mm_add_ps( _mm_add_ps((trngl->A->pos * hi.hitPoint.x).m, (trngl->B->pos * hi.hitPoint.y).m), (trngl->C->pos * hi.hitPoint.z).m);
 
-	WFloat4 normal(trngl->A->normal * hi.hitPoint.x 
+	/*WFloat4 normal(trngl->A->normal * hi.hitPoint.x 
 					+ trngl->B->normal * hi.hitPoint.y
-					+ trngl->C->normal * hi.hitPoint.z);
+					+ trngl->C->normal * hi.hitPoint.z);*/
+	
+	normal.m = _mm_add_ps(_mm_add_ps((trngl->A->normal * hi.hitPoint.x).m, (trngl->B->normal * hi.hitPoint.y).m), (trngl->C->normal * hi.hitPoint.z).m);
 
-	normal = normal.normalize();
+	normal.normalizeSSE();
 
 	for (int i = 0; i < lights.size(); i++)
 	{
 		Light *light = lights[i];
 		WFloat4 lightDirection = light->getDirection(hitPoint);
-		lightDirection = lightDirection.normalize();
+		lightDirection.normalizeSSE();
 		//diffuse
-		float dotN = std::max(0.0f, std::min(WFloat4::dotProduct(lightDirection, normal), 1.0f));
-		diffuse = diffuse + (ambientMaterial * light->getDiffuse() * dotN);
-		result = result + diffuse;
+		float dotN = std::max(0.0f, std::min(lightDirection.dotProductSSE(normal), 1.0f));
+		diffuse += (ambientMaterial * (*light->getDiffuse()) * dotN);
+		result += diffuse;
 		//ambient
-		ambient = ambient + light->getAmbient();
-		result = result + ambient;
+		ambient += (*light->getAmbient());
+		result += ambient;
 		//specular
-		specular = specular + light->getSpecular();
-		result = result + specular;
+		specular += (*light->getSpecular());
+		result += specular;
 	}
 
 	return result;

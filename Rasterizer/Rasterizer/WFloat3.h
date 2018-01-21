@@ -1,10 +1,13 @@
 #pragma once
 class WFloat4x4;
 
-class WFloat3
+__declspec(align(32)) class WFloat3
 {
 public:
-	float x, y, z;
+	__declspec(align(32)) union {
+		struct { float x, y, z; };
+		__m128 mmv;
+	};
 	WFloat3();
 	WFloat3(float _x, float _y, float _z);
 	~WFloat3();

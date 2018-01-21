@@ -77,6 +77,12 @@ WColor WColor::operator=(unsigned int col)
 	return *this;
 }
 
+WColor & WColor::operator+=(const WColor & col2)
+{
+	this->value += col2.value;
+	return *this;
+}
+
 unsigned int WColor::getR()
 {
 	return (value >> 16 & 255);

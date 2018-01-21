@@ -63,7 +63,7 @@ void VertexProcessor::setPerspective(float fov, float ratio, float near, float f
 
 void VertexProcessor::lookAt(WFloat4 up, WFloat4 eye, WFloat4 target)
 {
-	up = up.normalize();
+	up.normalizeSSE();
 	WFloat4 forward = WFloat4(eye, target).normalize();
 	WFloat4 right = WFloat4::crossProduct(up, forward).normalize();
 	up = WFloat4::crossProduct(forward, right);
@@ -95,7 +95,7 @@ void VertexProcessor::multByRot(float a, WFloat4 v)
 	float radians = M_PI / 180.0f;
 	float s = std::sin(a * radians);
 	float c = std::cos(a * radians);
-	v = v.normalize();
+	v.normalizeSSE();
 
 	WFloat4x4 R = { { v.x * v.x * (1 - c) + c,
 					v.x * v.y * (1 - c) - v.z * s,

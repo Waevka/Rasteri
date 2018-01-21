@@ -13,6 +13,7 @@ public:
 	WColor operator*(WColor c);
 	WColor operator=(WColor color2);
 	WColor operator=(unsigned int col);
+	WColor &operator +=(const WColor &col2);
 	unsigned int getR();
 	unsigned int getG();
 	unsigned int getB();
