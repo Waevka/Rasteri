@@ -1,6 +1,16 @@
 #include "stdafx.h"
 #include "Light.h"
 
+inline __m128 CrossProduct(__m128 u, __m128 v) {
+	return _mm_sub_ps(
+		_mm_mul_ps(
+			_mm_shuffle_ps(u, u, _MM_SHUFFLE(3, 0, 2, 1)),
+			_mm_shuffle_ps(v, v, _MM_SHUFFLE(3, 1, 0, 2))),
+		_mm_mul_ps(
+			_mm_shuffle_ps(u, u, _MM_SHUFFLE(3, 1, 0, 2)),
+			_mm_shuffle_ps(v, v, _MM_SHUFFLE(3, 0, 2, 1)))
+	);
+}
 
 Light::Light(WFloat4 _o, WFloat4 _d)
 {
@@ -15,13 +25,13 @@ Light::~Light()
 {
 }
 
-WFloat4 Light::getDirection(WFloat4 dir)
+__m128 Light::getDirection(WFloat4 dir)
 {
 	if (o.w == 0.0f) {
-		return d;
+		return d.m;
 	}
 	else if (o.w == 1.0f) {
-		return WFloat4(dir, o);
+		return CrossProduct(dir.m, o.m); //WFloat4(dir, o);
 	}
 }
 

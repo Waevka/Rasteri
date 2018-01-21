@@ -1,4 +1,8 @@
 #pragma once
+
+static const int S_WIDTH = 1024;
+static const int S_HEIGHT = 1024;
+
 class Buffer
 {
 public:

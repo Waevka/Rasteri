@@ -1,5 +1,5 @@
 #pragma once
-class WVertex
+struct WVertex
 {
 public:
 	WFloat4 pos;

@@ -1,5 +1,5 @@
 #pragma once
-class Light
+struct Light
 {
 private:
 	WColor ambient;
@@ -10,7 +10,7 @@ public:
 	WFloat4 d;
 	Light(WFloat4 _o, WFloat4 _d);
 	~Light();
-	WFloat4 getDirection(WFloat4 dir);
+	__m128 getDirection(WFloat4 dir);
 
 	Light operator*=(WFloat4x4 matrix);
 	Light operator/=(float f);

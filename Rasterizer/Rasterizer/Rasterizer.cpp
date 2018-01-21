@@ -33,7 +33,7 @@ void Rasterizer::renderScanline()
 	WFloat4 eye(-1.5f, 2.5f, -3.0f);
 	WFloat4 target(0.5f, 0.0f, 0.5f);
 	vertexProcessor.lookAt(up, eye, target);
-	vertexProcessor.setPerspective(45.0f, buffer.width * 1.0f / buffer.height, 0.2f, 10.0f);
+	vertexProcessor.setPerspective(45.0f, S_WIDTH * 1.0f / S_HEIGHT, 0.2f, 10.0f);
 
 	std::vector<ObjMesh*> meshes;
 	std::vector<Light*> lights;

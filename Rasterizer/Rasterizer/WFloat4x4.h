@@ -1,5 +1,5 @@
 #pragma once
-class WFloat4x4
+struct WFloat4x4
 {
 public:
 	float matrix[4][4];

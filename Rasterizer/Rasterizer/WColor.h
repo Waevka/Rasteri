@@ -1,5 +1,5 @@
 #pragma once
-class WColor
+struct WColor
 {
 public:
 	unsigned int value;

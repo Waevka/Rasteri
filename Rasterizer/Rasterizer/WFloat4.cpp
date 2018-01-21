@@ -10,6 +10,10 @@ WFloat4::WFloat4()
 	w = 1.0f;
 }
 
+WFloat4::WFloat4(__m128 x) : m(x)
+{
+}
+
 
 WFloat4::WFloat4(float _x, float _y, float _z)
 {
@@ -68,7 +72,7 @@ WFloat4 WFloat4::operator*(WFloat4 f)
 	return r;
 }
 
-WFloat4 WFloat4::operator+(WFloat4 f)
+/*WFloat4 WFloat4::operator+(WFloat4 f)
 {
 	WFloat4 r(*this);
 	r.y += f.y;
@@ -77,7 +81,7 @@ WFloat4 WFloat4::operator+(WFloat4 f)
 	r.w += f.w;
 
 	return r;
-}
+}*/
 
 WFloat4 WFloat4::operator/=(float f)
 {
@@ -131,6 +135,11 @@ float WFloat4::len()
 float WFloat4::len2()
 {
 	return (x*x) + (y*y) + (z*z);
+}
+
+float WFloat4::getsum()
+{
+	return x + y + z;
 }
 
 WFloat4 WFloat4::crossProduct(WFloat4 u, WFloat4 v)

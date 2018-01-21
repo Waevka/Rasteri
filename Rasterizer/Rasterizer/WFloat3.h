@@ -1,7 +1,7 @@
 #pragma once
-class WFloat4x4;
+struct WFloat4x4;
 
-class WFloat3
+struct WFloat3
 {
 public:
 	float x, y, z;

@@ -29,9 +29,9 @@ bool TgaBuffer::writeToFile(Buffer buffer) {
 	file2.write((const char*)&header, 18);
 	for (int i = 0; i < 1024; i++) {
 		for (int j = 0; j < 1024; j++) {
-			unsigned int color = buffer.color[((int)buffer.width * i) + j];
+			unsigned int color = buffer.color[((int)S_WIDTH * i) + j];
 			file.write((const char*)&color, sizeof(unsigned int));
-			unsigned int d = 255 - (255 * buffer.depth[((int)buffer.width * i) + j]);
+			unsigned int d = 255 - (255 * buffer.depth[((int)S_WIDTH * i) + j]);
 			unsigned int depth = d + (d << 8) + (d << 16) + (d << 24);
 			file2.write((const char*)&depth, sizeof(unsigned int));
 		}

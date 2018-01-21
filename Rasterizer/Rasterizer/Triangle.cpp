@@ -20,10 +20,8 @@ Triangle::~Triangle()
 {
 }
 
-HitInfo Triangle::intersectTriangle(float x, float y)
+void Triangle::intersectTriangle(float x, float y, HitInfo *hi)
 {	
-	HitInfo hitInfo;
-
 	float BCy = B->pos.y - C->pos.y;
 	float CBx = C->pos.x - B->pos.x;
 	float ACx = A->pos.x - C->pos.x;
@@ -35,18 +33,17 @@ HitInfo Triangle::intersectTriangle(float x, float y)
 	double BC = (-CBx) * (y - B->pos.y) - (BCy) * (x - B->pos.x); // P2, P3, P
 	double CA = (-ACx) * (yc)-(CAy) * (xc); // P3, P1, P
 
-	hitInfo.hasHit = AB >= 0 && BC >= 0 && CA >= 0;
+	hi->hasHit = AB >= 0 && BC >= 0 && CA >= 0;
 
-	if (hitInfo.hasHit) {
+	if (hi->hasHit) {
 		double L1 = ((BCy * xc) + (CBx * yc)) / ((BCy *  ACx) + (CBx * (-CAy)));
 		double L2 = ((CAy * xc) + (ACx * yc)) / ((CAy *(-CBx)) + (ACx *   BCy));
 		double L3 = 1 - L1 - L2;
 
-		hitInfo.hitPoint.x = L1;
-		hitInfo.hitPoint.y = L2;
-		hitInfo.hitPoint.z = L3;
+		hi->hitPoint.x = L1;
+		hi->hitPoint.y = L2;
+		hi->hitPoint.z = L3;
 	}
 
-	return hitInfo;
 }
 

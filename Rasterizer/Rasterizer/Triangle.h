@@ -1,7 +1,7 @@
 #pragma once
 
 
-class Triangle {
+struct Triangle {
 public:
 	WVertex *A, *B, *C;
 	Triangle();
@@ -12,7 +12,7 @@ public:
 		WColor _color1, WColor _color2, WColor _color3);
 		*/
 	~Triangle();
-	HitInfo intersectTriangle(float x, float y);
+	void intersectTriangle(float x, float y, HitInfo *hi);
 	WVertex operator/=(float f);
 };
 

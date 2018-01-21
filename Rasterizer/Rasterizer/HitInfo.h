@@ -1,8 +1,8 @@
 #pragma once
-class HitInfo
+struct HitInfo
 {
 public:
-	bool hasHit;
+	bool hasHit = false;
 	WFloat4 hitPoint;
 	HitInfo();
 	~HitInfo();

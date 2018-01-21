@@ -42,18 +42,18 @@ void Buffer::setSize(int w, int h)
 
 void Buffer::clearColor()
 {
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
-			color[((int)width * j) + i] = (unsigned int)1.0f;
+	for (int i = 0; i < S_WIDTH; i++) {
+		for (int j = 0; j < S_HEIGHT; j++) {
+			color[((int)S_WIDTH * j) + i] = (unsigned int)1.0f;
 		}
 	}
 }
 
 void Buffer::clearDepth()
 {
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
-			depth[((int)width * j) + i] = (unsigned int)1.0f;
+	for (int i = 0; i < S_WIDTH; i++) {
+		for (int j = 0; j < S_HEIGHT; j++) {
+			depth[((int)S_WIDTH * j) + i] = (unsigned int)1.0f;
 		}
 	}
 }
@@ -66,8 +66,8 @@ void Buffer::clear()
 
 void Buffer::writeColor(float x, float y, WColor _c, float d)
 {
-	this->depth[((int)width * (int)y) + (int)x] = d;
-	this->color[((int)width * (int)y) + (int)x] = _c.value;
+	this->depth[((int)S_WIDTH * (int)y) + (int)x] = d;
+	this->color[((int)S_WIDTH * (int)y) + (int)x] = _c.value;
 }
 
 

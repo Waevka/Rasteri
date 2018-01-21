@@ -1,5 +1,5 @@
 #pragma once
-class ObjMesh
+struct ObjMesh
 {
 public:
 	ObjMesh(std::string name);

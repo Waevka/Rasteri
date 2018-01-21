@@ -1,6 +1,16 @@
 #include "stdafx.h"
 #include "VertexProcessor.h"
 
+inline __m128 CrossProduct(__m128 u, __m128 v) {
+	return _mm_sub_ps(
+		_mm_mul_ps(
+			_mm_shuffle_ps(u, u, _MM_SHUFFLE(3, 0, 2, 1)),
+			_mm_shuffle_ps(v, v, _MM_SHUFFLE(3, 1, 0, 2))),
+		_mm_mul_ps(
+			_mm_shuffle_ps(u, u, _MM_SHUFFLE(3, 1, 0, 2)),
+			_mm_shuffle_ps(v, v, _MM_SHUFFLE(3, 0, 2, 1)))
+	);
+}
 
 VertexProcessor::VertexProcessor()
 {
@@ -65,8 +75,12 @@ void VertexProcessor::lookAt(WFloat4 up, WFloat4 eye, WFloat4 target)
 {
 	up = up.normalize();
 	WFloat4 forward = WFloat4(eye, target).normalize();
-	WFloat4 right = WFloat4::crossProduct(up, forward).normalize();
-	up = WFloat4::crossProduct(forward, right);
+	//WFloat4 right = WFloat4::crossProduct(up, forward).normalize();
+	WFloat4 right;
+	right.m = CrossProduct(up.m, forward.m);
+	right.normalize();
+	//up = WFloat4::crossProduct(forward, right);
+	up = CrossProduct(forward.m, right.m);
 
 	WFloat4x4 Mov = { { 1, 0, 0, -eye.x },
 					{ 0, 1, 0, -eye.y },

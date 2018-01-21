@@ -16,15 +16,16 @@ void FragmentProcessor::processTriangle(Buffer & buffer)
 	//set up buffer min max values
 	minmax(buffer.minx, buffer.miny, buffer.maxx, buffer.maxy);
 	//calculate size between each pixel
-	float deltaX = 1.0 / buffer.width;
-	float deltaY = 1.0 / buffer.height;
+	//float deltaX = 1.0 / S_WIDTH;
+	//float deltaY = 1.0 / S_HEIGHT;
 
-	for (float x = buffer.minx; x < buffer.maxx; x += deltaX)
+	for (float x = buffer.minx; x < buffer.maxx; x += (1.0 / S_WIDTH))
 	{
-		for (float y = buffer.miny; y < buffer.maxy; y += deltaY)
+		for (float y = buffer.miny; y < buffer.maxy; y += (1.0 / S_HEIGHT))
 		{	
 			//keep hit info in a structure
-			HitInfo hitInfo = trngl->intersectTriangle(x, y);
+			HitInfo hitInfo; 
+			trngl->intersectTriangle(x, y, &hitInfo);
 			if (hitInfo.hasHit) {
 
 				float currentDepth = trngl->A->pos.z * hitInfo.hitPoint.x
@@ -34,27 +35,10 @@ void FragmentProcessor::processTriangle(Buffer & buffer)
 				if (currentDepth <= 1 && currentDepth >= 0)
 				{	
 					// use halfpixel
-					int xDel = buffer.width * 0.5f * (x + 1);
-					int	yDel = buffer.height * 0.5f * (y + 1);
+					int xDel = S_WIDTH * 0.5f * (x + 1);
+					int	yDel = S_HEIGHT * 0.5f * (y + 1);
 
-					//first test
-					bool depthTest1;
-					if (currentDepth < buffer.depth[(int)(buffer.width * yDel + xDel)]) {
-						depthTest1 = true;
-					}
-					else {
-						depthTest1 = false;
-					}
-					//second test
-					bool depthTest2; 
-					if (buffer.depth[(int)(buffer.width * yDel + xDel)] == 1) {
-						depthTest2 = true;
-					}
-					else {
-						depthTest2 = false;
-					}
-
-					if (depthTest1 || depthTest2)
+					if (currentDepth < buffer.depth[(int)(S_WIDTH * yDel + xDel)] || buffer.depth[(int)(S_WIDTH * yDel + xDel)] == 1)
 					{
 						WColor color = processColor(hitInfo);
 						buffer.writeColor(xDel, yDel, color, currentDepth);
@@ -76,20 +60,21 @@ WColor FragmentProcessor::processColor(HitInfo hi)
 	WColor diffuse = 0;
 	WColor specular = 0;
 
-	WFloat4 hitPoint(trngl->A->pos * hi.hitPoint.x 
-					+ trngl->B->pos * hi.hitPoint.y 
-					+ trngl->C->pos * hi.hitPoint.z);
+	WFloat4 hitPoint;
+	hitPoint.m = _mm_add_ps(_mm_add_ps((trngl->A->pos * hi.hitPoint.x).m, (trngl->B->pos * hi.hitPoint.y).m), (trngl->C->pos * hi.hitPoint.z).m);
+	//WFloat4 hitPoint(trngl->A->pos * hi.hitPoint.x 	+ trngl->B->pos * hi.hitPoint.y + trngl->C->pos * hi.hitPoint.z);
 
-	WFloat4 normal(trngl->A->normal * hi.hitPoint.x 
-					+ trngl->B->normal * hi.hitPoint.y
-					+ trngl->C->normal * hi.hitPoint.z);
+	WFloat4 normal;
+	normal.m = _mm_add_ps(_mm_add_ps((trngl->A->normal * hi.hitPoint.x).m, (trngl->B->normal * hi.hitPoint.y).m), (trngl->C->normal * hi.hitPoint.z).m);
+	//WFloat4 normal(trngl->A->normal * hi.hitPoint.x + trngl->B->normal * hi.hitPoint.y + trngl->C->normal * hi.hitPoint.z);
 
 	normal = normal.normalize();
 
 	for (int i = 0; i < lights.size(); i++)
 	{
 		Light *light = lights[i];
-		WFloat4 lightDirection = light->getDirection(hitPoint);
+		WFloat4 lightDirection;
+		lightDirection.m = light->getDirection(hitPoint);
 		lightDirection = lightDirection.normalize();
 		//diffuse
 		float dotN = std::max(0.0f, std::min(WFloat4::dotProduct(lightDirection, normal), 1.0f));
