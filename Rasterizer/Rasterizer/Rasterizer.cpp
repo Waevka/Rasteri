@@ -85,6 +85,12 @@ void Rasterizer::renderScanline()
 
 	lights.push_back(light2);*/
 
+	//Time
+	std::clock_t start;
+	double duration;
+
+	start = std::clock();
+
 	for (int i = 0; i < meshes.size(); i++) {
 		vertexProcessor.processTransformations(meshes[i], OX, OY, OZ, lights);
 
@@ -93,7 +99,10 @@ void Rasterizer::renderScanline()
 			fragmentProcessor.trngl = meshes[i]->triangles[j];
 			fragmentProcessor.processTriangle(buffer);
 		}
-	}	
+	}
+
+	duration = std::clock() - start;
+	duration /= (double)CLOCKS_PER_SEC;
 
 	bool success = tgaBuffer->writeToFile(buffer);
 	if (!success) {
@@ -102,4 +111,8 @@ void Rasterizer::renderScanline()
 	else {
 		std::cout << "Finished saving to render.tga and renderDepth.tga files.";
 	}
+
+	std::cout << "Duration: " << duration << "s";
+	std::cin.get();
+
 }
