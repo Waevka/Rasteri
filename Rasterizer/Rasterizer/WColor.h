@@ -14,9 +14,9 @@ public:
 	WColor operator=(WColor color2);
 	WColor operator=(unsigned int col);
 	WColor &operator +=(const WColor &col2);
-	unsigned int getR();
-	unsigned int getG();
-	unsigned int getB();
-	unsigned int getA();
+	unsigned inline int getR();
+	unsigned inline int getG();
+	unsigned inline int getB();
+	unsigned inline int getA();
 };
 

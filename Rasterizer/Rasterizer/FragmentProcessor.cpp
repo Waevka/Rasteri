@@ -86,7 +86,7 @@ WColor FragmentProcessor::processColor(HitInfo hi)
 
 	normal.normalizeSSE();
 
-	for (int i = 0; i < lights.size(); i++)
+	for (int i = 0; i < lights.size(); ++i)
 	{
 		Light *light = lights[i];
 		WFloat4 lightDirection = light->getDirection(hitPoint);
@@ -103,7 +103,7 @@ WColor FragmentProcessor::processColor(HitInfo hi)
 	return result;
 }
 
-void FragmentProcessor::minmax(float & minx, float & miny, float & maxx, float & maxy)
+void inline FragmentProcessor::minmax(float & minx, float & miny, float & maxx, float & maxy)
 {
 	maxx = (trngl->A->pos.x > trngl->B->pos.x) ? trngl->A->pos.x : trngl->B->pos.x;
 	maxx = (maxx > trngl->C->pos.x) ? maxx : trngl->C->pos.x;

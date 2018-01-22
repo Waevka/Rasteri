@@ -91,11 +91,11 @@ float Rasterizer::renderScanline()
 
 	start = std::clock();
 
-	for (int i = 0; i < meshes.size(); i++) {
+	for (int i = 0; i < meshes.size(); ++i) {
 		vertexProcessor.processTransformations(meshes[i], OX, OY, OZ, lights);
 
 		fragmentProcessor.lights = lights;
-		for (int j = 0; j < (int)meshes[i]->triangles.size(); j++) {
+		for (int j = 0; j < (int)meshes[i]->triangles.size(); ++j) {
 			fragmentProcessor.trngl = meshes[i]->triangles[j];
 			fragmentProcessor.processTriangle(buffer);
 		}

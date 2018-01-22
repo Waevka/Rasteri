@@ -2,14 +2,12 @@
 #include "WColor.h"
 
 
-WColor::WColor()
+WColor::WColor() : value(0xAAAAAA)
 {
-	value = 0xAAAAAA;
 }
 
-WColor::WColor(unsigned int c)
+WColor::WColor(unsigned int c) : value(c)
 {
-	this->value = c;
 }
 
 
@@ -83,22 +81,22 @@ WColor & WColor::operator+=(const WColor & col2)
 	return *this;
 }
 
-unsigned int WColor::getR()
+unsigned inline int WColor::getR()
 {
 	return (value >> 16 & 255);
 }
 
-unsigned int WColor::getG()
+unsigned inline int WColor::getG()
 {
 	return (value >> 8 & 255);
 }
 
-unsigned int WColor::getB()
+unsigned inline int WColor::getB()
 {
 	return (value & 255);
 }
 
-unsigned int WColor::getA()
+unsigned inline int WColor::getA()
 {
 	return (value >> 24 & 255);
 }

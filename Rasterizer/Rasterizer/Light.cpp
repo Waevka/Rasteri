@@ -60,7 +60,7 @@ void Light::setAmbient(unsigned int c)
 
 WColor* Light::getDiffuse()
 {
-	return &(this->diffuse);
+	return &diffuse;
 }
 
 WColor* Light::getSpecular()

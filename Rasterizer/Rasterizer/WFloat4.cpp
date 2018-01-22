@@ -32,13 +32,13 @@ WFloat4::WFloat4(float _x, float _y, float _z, float _w) : m(_mm_set_ps(_w, _z, 
 	//w = _w;
 }
 
-WFloat4::WFloat4(WFloat4 u, WFloat4 v)
+WFloat4::WFloat4(WFloat4 u, WFloat4 v) : m(_mm_sub_ps(v.m, u.m)), w(1.0f)
 {
-	m = _mm_sub_ps(v.m, u.m);
+	//m = ;
 	//x = v.x - u.x;
 	//y = v.y - u.y;
 	//z = v.z - u.z;
-	w = 1.0f;
+	//w = 1.0f;
 }
 
 WFloat4 WFloat4::operator*=(WFloat4x4 matrix)
