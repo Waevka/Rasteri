@@ -22,28 +22,30 @@ Triangle::~Triangle()
 
 void Triangle::intersectTriangle(float x, float y, HitInfo &hitInfo)
 {	
-
+	
 	float BCy = B->pos.y - C->pos.y;
 	float CBx = C->pos.x - B->pos.x;
 	float ACx = A->pos.x - C->pos.x;
 	float CAy = C->pos.y - A->pos.y;
-	float xc = x - C->pos.x;
-	float yc = y - C->pos.y;
+	//float xc = x - C->pos.x;
+	//float yc = y - C->pos.y;
 
-	double AB = (A->pos.x - B->pos.x) * (y - A->pos.y) - (A->pos.y - B->pos.y) * (x - A->pos.x); // P1, P2, P
-	double BC = (-CBx) * (y - B->pos.y) - (BCy) * (x - B->pos.x); // P2, P3, P
-	double CA = (-ACx) * (yc)-(CAy) * (xc); // P3, P1, P
+	//double AB = (A->pos.x - B->pos.x) * (y - A->pos.y) - (A->pos.y - B->pos.y) * (x - A->pos.x); // P1, P2, P
+	//double BC = (-CBx) * (y - B->pos.y) - (BCy) * (x - B->pos.x); // P2, P3, P
+	//double CA = (-ACx) * (y - C->pos.y)-(CAy) * (x - C->pos.x); // P3, P1, P
 
-	hitInfo.hasHit = AB >= 0 && BC >= 0 && CA >= 0;
+	hitInfo.hasHit = ((((A->pos.x - B->pos.x) * (y - A->pos.y) - (A->pos.y - B->pos.y) * (x - A->pos.x)) >= 0) &&
+		(((-CBx) * (y - B->pos.y) - (BCy) * (x - B->pos.x)) >= 0) &&
+		(((-ACx) * (y - C->pos.y) - (CAy) * (x - C->pos.x)) >= 0));
 
 	if (hitInfo.hasHit) {
-		double L1 = ((BCy * xc) + (CBx * yc)) / ((BCy *  ACx) + (CBx * (-CAy)));
-		double L2 = ((CAy * xc) + (ACx * yc)) / ((CAy *(-CBx)) + (ACx *   BCy));
-		double L3 = 1 - L1 - L2;
+		//double L1 = ((BCy * (x - C->pos.x)) + (CBx * (y - C->pos.y))) / ((BCy *  ACx) + (CBx * (-CAy)));
+		//double L2 = ((CAy * (x - C->pos.x)) + (ACx * (y - C->pos.y))) / ((CAy *(-CBx)) + (ACx *   BCy));
+		//double L3 = 1 - L1 - L2;
 
-		hitInfo.hitPoint.x = L1;
-		hitInfo.hitPoint.y = L2;
-		hitInfo.hitPoint.z = L3;
+		hitInfo.hitPoint.x = ((BCy * (x - C->pos.x)) + (CBx * (y - C->pos.y))) / ((BCy *  ACx) + (CBx * (-CAy)));
+		hitInfo.hitPoint.y = ((CAy * (x - C->pos.x)) + (ACx * (y - C->pos.y))) / ((CAy *(-CBx)) + (ACx *   BCy));
+		hitInfo.hitPoint.z = 1 - hitInfo.hitPoint.x - hitInfo.hitPoint.y;
 	}
 }
 
