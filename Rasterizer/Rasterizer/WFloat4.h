@@ -10,7 +10,7 @@ public:
 		struct { float x, y, z, w; };
 	};
 	WFloat4();
-	WFloat4(__m128 m);
+	WFloat4(__m128 _m);
 	WFloat4(float _x, float _y, float _z);
 	WFloat4(float _x, float _y, float _z, float _w);
 	WFloat4(WFloat4 u, WFloat4 v);
@@ -25,6 +25,7 @@ public:
 	float invSqrt(float n);
 	float len();
 	float len2();
+	float Magnitude();
 	static WFloat4 crossProduct(WFloat4& u, WFloat4& v);
 	static float dotProduct(WFloat4 u, WFloat4 v);
 	float dotProductSSE(WFloat4 &rhs);

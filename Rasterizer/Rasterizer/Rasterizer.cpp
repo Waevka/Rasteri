@@ -26,14 +26,14 @@ Rasterizer::~Rasterizer()
 {
 }
 
-void Rasterizer::renderScanline()
+float Rasterizer::renderScanline()
 {
 	//Set up camera
 	WFloat4 up(0.0f, 1.0f, 0.0f);
 	WFloat4 eye(-1.5f, 2.5f, -3.0f);
 	WFloat4 target(0.5f, 0.0f, 0.5f);
 	vertexProcessor.lookAt(up, eye, target);
-	vertexProcessor.setPerspective(45.0f, buffer.width * 1.0f / buffer.height, 0.2f, 10.0f);
+	vertexProcessor.setPerspective(45.0f, BWIDTH * 1.0f / BHEIGHT, 0.2f, 10.0f);
 
 	std::vector<ObjMesh*> meshes;
 	std::vector<Light*> lights;
@@ -112,7 +112,7 @@ void Rasterizer::renderScanline()
 		std::cout << "Finished saving to render.tga and renderDepth.tga files.";
 	}
 
-	std::cout << "Duration: " << duration << "s";
-	std::cin.get();
+	std::cout << "\nDuration: " << duration << "s ";
+	return duration;
 
 }

@@ -5,7 +5,7 @@ public:
 	Rasterizer();
 	Rasterizer(int w, int h);
 	~Rasterizer();
-	void renderScanline();
+	float renderScanline();
 	WFloat4 OX, OY, OZ;
 private:
 	VertexProcessor vertexProcessor;

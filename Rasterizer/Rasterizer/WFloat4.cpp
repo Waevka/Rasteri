@@ -2,34 +2,34 @@
 #include "WFloat4.h"
 
 
-WFloat4::WFloat4()
+WFloat4::WFloat4() : m(_mm_setzero_ps())
 {
-	x = 0.0f;
-	y = 0.0f;
-	z = 0.0f;
-	w = 1.0f;
+	//x = 0.0f;
+	//y = 0.0f;
+	//z = 0.0f;
+	//w = 1.0f;
 }
 
-WFloat4::WFloat4(__m128 m)
+WFloat4::WFloat4(__m128 _m) : m(_m)
 {
-	this->m = m;
+	//this->m = m;
 }
 
 
-WFloat4::WFloat4(float _x, float _y, float _z)
+WFloat4::WFloat4(float _x, float _y, float _z) : m(_mm_set_ps(1.0f, _z, _y, _x))
 {
-	x = _x;
-	y = _y;
-	z = _z;
-	w = 1.0f;
+	//x = _x;
+	//y = _y;
+	//z = _z;
+	//w = 1.0f;
 }
 
-WFloat4::WFloat4(float _x, float _y, float _z, float _w)
+WFloat4::WFloat4(float _x, float _y, float _z, float _w) : m(_mm_set_ps(_w, _z, _y, _x))
 {
-	x = _x;
-	y = _y;
-	z = _z;
-	w = _w;
+	//x = _x;
+	//y = _y;
+	//z = _z;
+	//w = _w;
 }
 
 WFloat4::WFloat4(WFloat4 u, WFloat4 v)
@@ -101,10 +101,12 @@ WFloat4 WFloat4::operator/=(float f)
 	else {
 		f = 1.0f / f;
 	}
-	y *= f;
-	z *= f;
-	x *= f;
-	w *= f;
+
+	m = _mm_mul_ps(m, _mm_set1_ps(f));
+	//y *= f;
+	//z *= f;
+	//x *= f;
+	//w *= f;
 
 	return *this;
 }
@@ -112,14 +114,19 @@ WFloat4 WFloat4::operator/=(float f)
 WFloat4 WFloat4::normalize()
 {
 	float length = len2();
+	float mag = Magnitude();
+	if (mag >= 0.001f) {
+		(*this) /= mag;
+	}/*
 	if (length != 0)
 	{	
 		length = invSqrt(length);
 		x *= length;
 		y *= length;
 		z *= length;
-		//m = _mm_div_ps(m, _mm_sqrt_ps(_mm_dp_ps(m, m, 0x7F)));
-	}
+		//m = _mm_mul_ps(m, _mm_set1_ps(length));
+		m = _mm_div_ps(m, _mm_sqrt_ps(_mm_dp_ps(m, m, 0x7F)));
+	}*/
 	return *this;
 }
 
@@ -149,6 +156,10 @@ float WFloat4::invSqrt(float n)
 	y = *(float *)&i;
 	y = y * (threehalfs - (x2 * y * y));
 	return y;
+}
+
+float WFloat4::Magnitude() {
+	return _mm_cvtss_f32(_mm_sqrt_ss(_mm_dp_ps(m, m, 0x71)));
 }
 
 float WFloat4::len()

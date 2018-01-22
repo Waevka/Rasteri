@@ -6,8 +6,8 @@ Buffer::Buffer()
 {
 	width = 1024;
 	height = 1024;
-	color = new unsigned int[1024 * 1024];
-	depth = new float[1024 * 1024];
+	color = new unsigned int[BWIDTH * BHEIGHT];
+	depth = new float[BWIDTH * BHEIGHT];
 	clear();
 }
 
@@ -64,10 +64,10 @@ void Buffer::clear()
 	clearDepth();
 }
 
-void Buffer::writeColor(float x, float y, WColor _c, float d)
+void Buffer::writeColor(float x, float y, const WColor &_c, float d)
 {
-	this->depth[((int)width * (int)y) + (int)x] = d;
-	this->color[((int)width * (int)y) + (int)x] = _c.value;
+	this->depth[(BWIDTH * (int)y) + (int)x] = d;
+	this->color[(BWIDTH * (int)y) + (int)x] = _c.value;
 }
 
 

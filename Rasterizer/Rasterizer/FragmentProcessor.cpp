@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "FragmentProcessor.h"
-
+#define XDELWIDTH BWIDTH * 0.5
 
 FragmentProcessor::FragmentProcessor()
 {
+	deltaX = 1.0 / (float)BWIDTH;
+	deltaY = 1.0 / (float)BHEIGHT;
 }
 
 
@@ -12,51 +14,38 @@ FragmentProcessor::~FragmentProcessor()
 }
 
 void FragmentProcessor::processTriangle(Buffer & buffer)
-{
+{	
+	HitInfo hitInfo;
+	float currentDepth;
+	WColor color;
 	//set up buffer min max values
 	minmax(buffer.minx, buffer.miny, buffer.maxx, buffer.maxy);
-	//calculate size between each pixel
-	float deltaX = 1.0 / buffer.width;
-	float deltaY = 1.0 / buffer.height;
 
 	for (float x = buffer.minx; x < buffer.maxx; x += deltaX)
 	{
 		for (float y = buffer.miny; y < buffer.maxy; y += deltaY)
 		{	
 			//keep hit info in a structure
-			HitInfo hitInfo = trngl->intersectTriangle(x, y);
+			trngl->intersectTriangle(x, y, hitInfo);
 			if (hitInfo.hasHit) {
 
-				float currentDepth = trngl->A->pos.z * hitInfo.hitPoint.x
-					+ trngl->B->pos.z * hitInfo.hitPoint.y
-					+ trngl->C->pos.z * hitInfo.hitPoint.z;
+				//currentDepth = trngl->A->pos.z * hitInfo.hitPoint.x
+				//	+ trngl->B->pos.z * hitInfo.hitPoint.y
+				//	+ trngl->C->pos.z * hitInfo.hitPoint.z;
+				WFloat4 sum = _mm_mul_ps(trngl->getZPositions(), hitInfo.hitPoint.m);
+				sum.m = _mm_hadd_ps(sum.m, sum.m);
+				sum.m = _mm_hadd_ps(sum.m, sum.m);
+				currentDepth = sum.x;
 
 				if (currentDepth <= 1 && currentDepth >= 0)
 				{	
 					// use halfpixel
-					int xDel = buffer.width * 0.5f * (x + 1);
-					int	yDel = buffer.height * 0.5f * (y + 1);
+					int xDel = XDELWIDTH * (x + 1);
+					int	yDel = (float)BHEIGHT * 0.5f * (y + 1);
 
-					//first test
-					bool depthTest1;
-					if (currentDepth < buffer.depth[(int)(buffer.width * yDel + xDel)]) {
-						depthTest1 = true;
-					}
-					else {
-						depthTest1 = false;
-					}
-					//second test
-					bool depthTest2; 
-					if (buffer.depth[(int)(buffer.width * yDel + xDel)] == 1) {
-						depthTest2 = true;
-					}
-					else {
-						depthTest2 = false;
-					}
-
-					if (depthTest1 || depthTest2)
+					if (currentDepth < buffer.depth[(BWIDTH * yDel + xDel)] || buffer.depth[(BWIDTH * yDel + xDel)] == 1)
 					{
-						WColor color = processColor(hitInfo);
+						color = processColor(hitInfo);
 						buffer.writeColor(xDel, yDel, color, currentDepth);
 					}
 				}
@@ -72,21 +61,28 @@ WColor FragmentProcessor::processColor(HitInfo hi)
 							+ trngl->C->color * hi.hitPoint.z);
 
 	WColor result = 0xFF000000;
-	WColor ambient(0);
-	WColor diffuse(0);
-	WColor specular(0);
+	//WColor ambient(0);
+	//WColor diffuse(0);
+	//WColor specular(0);
 
 	/*WFloat4 hitPoint(trngl->A->pos * hi.hitPoint.x 
 					+ trngl->B->pos * hi.hitPoint.y 
 					+ trngl->C->pos * hi.hitPoint.z);*/
 	
-	hitPoint.m = _mm_add_ps( _mm_add_ps((trngl->A->pos * hi.hitPoint.x).m, (trngl->B->pos * hi.hitPoint.y).m), (trngl->C->pos * hi.hitPoint.z).m);
+	hitPoint.m = _mm_add_ps( _mm_add_ps((
+										_mm_mul_ps(trngl->A->pos.m, _mm_set1_ps(hi.hitPoint.x))),
+										_mm_mul_ps(trngl->B->pos.m, _mm_set1_ps(hi.hitPoint.y))),
+							_mm_mul_ps(trngl->C->pos.m, _mm_set1_ps(hi.hitPoint.z)));
+
+	//hitPoint.m = _mm_add_ps( _mm_add_ps((trngl->A->pos * hi.hitPoint.x).m, (trngl->B->pos * hi.hitPoint.y).m), (trngl->C->pos * hi.hitPoint.z).m);
 
 	/*WFloat4 normal(trngl->A->normal * hi.hitPoint.x 
 					+ trngl->B->normal * hi.hitPoint.y
 					+ trngl->C->normal * hi.hitPoint.z);*/
 	
-	normal.m = _mm_add_ps(_mm_add_ps((trngl->A->normal * hi.hitPoint.x).m, (trngl->B->normal * hi.hitPoint.y).m), (trngl->C->normal * hi.hitPoint.z).m);
+	normal.m = _mm_add_ps(_mm_add_ps((_mm_mul_ps(trngl->A->normal.m, _mm_set1_ps(hi.hitPoint.x))), _mm_mul_ps(trngl->B->normal.m, _mm_set1_ps(hi.hitPoint.y))), _mm_mul_ps(trngl->C->normal.m, _mm_set1_ps(hi.hitPoint.z)));
+
+	//normal.m = _mm_add_ps(_mm_add_ps((trngl->A->normal * hi.hitPoint.x).m, (trngl->B->normal * hi.hitPoint.y).m), (trngl->C->normal * hi.hitPoint.z).m);
 
 	normal.normalizeSSE();
 
@@ -97,14 +93,11 @@ WColor FragmentProcessor::processColor(HitInfo hi)
 		lightDirection.normalizeSSE();
 		//diffuse
 		float dotN = std::max(0.0f, std::min(lightDirection.dotProductSSE(normal), 1.0f));
-		diffuse += (ambientMaterial * (*light->getDiffuse()) * dotN);
-		result += diffuse;
+		result += (ambientMaterial * (*light->getDiffuse()) * dotN);
 		//ambient
-		ambient += (*light->getAmbient());
-		result += ambient;
+		result += (*light->getAmbient());
 		//specular
-		specular += (*light->getSpecular());
-		result += specular;
+		result += (*light->getSpecular());
 	}
 
 	return result;
@@ -131,3 +124,4 @@ void FragmentProcessor::minmax(float & minx, float & miny, float & maxx, float &
 	miny>1 ? miny = 1 : miny<-1 ? miny = -1 : true;
 
 }
+

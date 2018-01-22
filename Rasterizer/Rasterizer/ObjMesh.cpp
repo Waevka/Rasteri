@@ -128,7 +128,7 @@ ObjMesh::ObjMesh(std::string name)
 				trngl->C->color = c;
 			}
 			else if (identifier == "#") {
-				std::cout << "Found comment: " << currentLine << std::endl;
+				//std::cout << "Found comment: " << currentLine << std::endl;
 			}
 		}
 	}

@@ -20,9 +20,8 @@ Triangle::~Triangle()
 {
 }
 
-HitInfo Triangle::intersectTriangle(float x, float y)
+void Triangle::intersectTriangle(float x, float y, HitInfo &hitInfo)
 {	
-	HitInfo hitInfo;
 
 	float BCy = B->pos.y - C->pos.y;
 	float CBx = C->pos.x - B->pos.x;
@@ -46,7 +45,10 @@ HitInfo Triangle::intersectTriangle(float x, float y)
 		hitInfo.hitPoint.y = L2;
 		hitInfo.hitPoint.z = L3;
 	}
+}
 
-	return hitInfo;
+__m128 Triangle::getZPositions()
+{
+	return _mm_set_ps(0.0f, C->pos.z, B->pos.z, A->pos.z);
 }
 

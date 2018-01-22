@@ -12,7 +12,8 @@ public:
 		WColor _color1, WColor _color2, WColor _color3);
 		*/
 	~Triangle();
-	HitInfo intersectTriangle(float x, float y);
+	void intersectTriangle(float x, float y, HitInfo& hitInfo);
+	__m128 getZPositions();
 	WVertex operator/=(float f);
 };
 

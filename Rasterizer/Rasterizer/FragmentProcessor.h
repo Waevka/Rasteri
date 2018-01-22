@@ -9,6 +9,7 @@ public:
 	void processTriangle(Buffer &buffer);
 	WFloat4 hitPoint;
 	WFloat4 normal;
+	float deltaX, deltaY;
 private:
 	WColor processColor(HitInfo hi);
 	void minmax(float &minx, float &miny, float &maxx, float &maxy);

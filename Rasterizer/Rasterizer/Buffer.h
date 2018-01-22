@@ -1,4 +1,7 @@
 #pragma once
+#define BHEIGHT 1024
+#define BWIDTH 1024
+
 class Buffer
 {
 public:
@@ -13,6 +16,6 @@ public:
 	void clearColor();
 	void clearDepth();
 	void clear();
-	void writeColor(float x, float y, WColor _c, float d);
+	void writeColor(float x, float y, const WColor &_c, float d);
 };
 
