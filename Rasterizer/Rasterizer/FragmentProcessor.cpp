@@ -18,6 +18,9 @@ void FragmentProcessor::processTriangle(Buffer & buffer)
 	HitInfo hitInfo;
 	float currentDepth;
 	WColor color;
+	WFloat4 &PosA = trngl->A->pos;
+	WFloat4 &PosB = trngl->B->pos;
+	WFloat4 &PosC = trngl->C->pos;
 	//set up buffer min max values
 	minmax(buffer.minx, buffer.miny, buffer.maxx, buffer.maxy);
 
@@ -26,7 +29,7 @@ void FragmentProcessor::processTriangle(Buffer & buffer)
 		for (float y = buffer.miny; y < buffer.maxy; y += deltaY)
 		{	
 			//keep hit info in a structure
-			trngl->intersectTriangle(x, y, hitInfo);
+			trngl->intersectTriangle(x, y, hitInfo, PosA, PosB, PosC);
 			if (hitInfo.hasHit) {
 
 				//currentDepth = trngl->A->pos.z * hitInfo.hitPoint.x
@@ -45,7 +48,7 @@ void FragmentProcessor::processTriangle(Buffer & buffer)
 
 					if (currentDepth < buffer.depth[(BWIDTH * yDel + xDel)] || buffer.depth[(BWIDTH * yDel + xDel)] == 1)
 					{
-						color = processColor(hitInfo);
+						color = processColor(hitInfo, *(trngl->A), *(trngl->B), *(trngl->C));
 						buffer.writeColor(xDel, yDel, color, currentDepth);
 					}
 				}
@@ -54,11 +57,11 @@ void FragmentProcessor::processTriangle(Buffer & buffer)
 	}
 }
 
-WColor FragmentProcessor::processColor(HitInfo hi)
+WColor FragmentProcessor::processColor(HitInfo hi, WVertex &VertA, WVertex &VertB, WVertex &VertC)
 {
-	WColor ambientMaterial = (trngl->A->color * hi.hitPoint.x
-							+ trngl->B->color * hi.hitPoint.y
-							+ trngl->C->color * hi.hitPoint.z);
+	WColor ambientMaterial = (VertA.color * hi.hitPoint.x
+							+ VertB.color * hi.hitPoint.y
+							+ VertC.color * hi.hitPoint.z);
 
 	WColor result = 0xFF000000;
 	//WColor ambient(0);
@@ -70,9 +73,9 @@ WColor FragmentProcessor::processColor(HitInfo hi)
 					+ trngl->C->pos * hi.hitPoint.z);*/
 	
 	hitPoint.m = _mm_add_ps( _mm_add_ps((
-										_mm_mul_ps(trngl->A->pos.m, _mm_set1_ps(hi.hitPoint.x))),
-										_mm_mul_ps(trngl->B->pos.m, _mm_set1_ps(hi.hitPoint.y))),
-							_mm_mul_ps(trngl->C->pos.m, _mm_set1_ps(hi.hitPoint.z)));
+										_mm_mul_ps(VertA.pos.m, _mm_set1_ps(hi.hitPoint.x))),
+										_mm_mul_ps(VertB.pos.m, _mm_set1_ps(hi.hitPoint.y))),
+							_mm_mul_ps(VertC.pos.m, _mm_set1_ps(hi.hitPoint.z)));
 
 	//hitPoint.m = _mm_add_ps( _mm_add_ps((trngl->A->pos * hi.hitPoint.x).m, (trngl->B->pos * hi.hitPoint.y).m), (trngl->C->pos * hi.hitPoint.z).m);
 
@@ -80,7 +83,7 @@ WColor FragmentProcessor::processColor(HitInfo hi)
 					+ trngl->B->normal * hi.hitPoint.y
 					+ trngl->C->normal * hi.hitPoint.z);*/
 	
-	normal.m = _mm_add_ps(_mm_add_ps((_mm_mul_ps(trngl->A->normal.m, _mm_set1_ps(hi.hitPoint.x))), _mm_mul_ps(trngl->B->normal.m, _mm_set1_ps(hi.hitPoint.y))), _mm_mul_ps(trngl->C->normal.m, _mm_set1_ps(hi.hitPoint.z)));
+	normal.m = _mm_add_ps(_mm_add_ps((_mm_mul_ps(VertA.normal.m, _mm_set1_ps(hi.hitPoint.x))), _mm_mul_ps(VertB.normal.m, _mm_set1_ps(hi.hitPoint.y))), _mm_mul_ps(VertC.normal.m, _mm_set1_ps(hi.hitPoint.z)));
 
 	//normal.m = _mm_add_ps(_mm_add_ps((trngl->A->normal * hi.hitPoint.x).m, (trngl->B->normal * hi.hitPoint.y).m), (trngl->C->normal * hi.hitPoint.z).m);
 

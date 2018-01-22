@@ -12,7 +12,7 @@ public:
 		WColor _color1, WColor _color2, WColor _color3);
 		*/
 	~Triangle();
-	void intersectTriangle(float x, float y, HitInfo& hitInfo);
+	void intersectTriangle(float x, float y, HitInfo& hitInfo, WFloat4 &PosA, WFloat4 &PosB, WFloat4 &PosC);
 	__m128 getZPositions();
 	WVertex operator/=(float f);
 };

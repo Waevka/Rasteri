@@ -11,7 +11,7 @@ public:
 	WFloat4 normal;
 	float deltaX, deltaY;
 private:
-	WColor processColor(HitInfo hi);
+	WColor processColor(HitInfo hi, WVertex &VertA, WVertex &VertB, WVertex &VertC);
 	void inline minmax(float &minx, float &miny, float &maxx, float &maxy);
 };
 
